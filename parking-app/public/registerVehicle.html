@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register Vehicle</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(180deg, #111 0%, #222 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+      }
+      /* Wave Backgrounds */
+      .top-wave,
+      .bottom-wave {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+      }
+      .top-wave {
+        top: 0;
+      }
+      .bottom-wave {
+        bottom: 0;
+        transform: rotate(180deg);
+      }
+      /* Hero Container */
+      .hero-container {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 900px;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hero-card {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(10px);
+        border-radius: 40px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        padding: 3rem;
+        text-align: center;
+        width: 100%;
+        max-width: 700px;
+        animation: fadeIn 1.2s ease forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .hero-card h1 {
+        font-weight: 600;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .vehicle-form {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .vehicle-form .form-group {
+        margin-bottom: 1.5rem;
+      }
+      .vehicle-form input {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #555;
+        width: 100%;
+        padding: 10px 5px;
+        color: #fff;
+        font-size: 1rem;
+      }
+      .vehicle-form input:focus {
+        outline: none;
+        border-bottom-color: #1a73e8;
+      }
+      .vehicle-form ::placeholder {
+        color: #aaa;
+      }
+      .vehicle-btn {
+        width: 100%;
+        height: 45px;
+        font-weight: 600;
+        background-color: #1a73e8;
+        border: none;
+        border-radius: 5px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        color: #fff;
+      }
+      .vehicle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+      @media (max-width: 768px) {
+        .hero-card {
+          padding: 2rem;
+        }
+        .hero-card h1 {
+          font-size: 2rem;
+        }
+      }
+      /* Sidebar Styles */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        height: 100%;
+        background-color: #111;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        transition: left 0.3s ease;
+        z-index: 1200;
+      }
+      .sidebar.active {
+        left: 0;
+      }
+      .sidebar h2 {
+        margin: 0 0 1rem 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .sidebar ul li {
+        margin-bottom: 1rem;
+      }
+      .sidebar ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        display: block;
+        padding: 0.5rem 0.8rem;
+        border-radius: 5px;
+        transition: background 0.2s;
+      }
+      .sidebar ul li a:hover {
+        background-color: #333;
+      }
+      .close-btn {
+        font-size: 1.5rem;
+        text-align: right;
+        cursor: pointer;
+        margin-bottom: 1rem;
+      }
+      /* Hamburger Button */
+      .hamburger-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #fff;
+        cursor: pointer;
+        z-index: 1100;
+        transition: transform 0.2s;
+      }
+      .hamburger-btn:hover {
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Wave Background -->
+    <div class="top-wave">
+      <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#111" fill-opacity="1" d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+      </svg>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="close-btn" id="closeBtn">&times;</div>
+      <h2>Owner Menu</h2>
+      <ul>
+        
+        <li><a href="registerVehicle.html">Register Vehicle</a></li>
+        <li><a href="bookParking.html">Book Parking</a></li>
+        <li><a href="myReservations.html">My Reservations</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+    
+    <!-- Hamburger Button -->
+    <button class="hamburger-btn" id="hamburgerBtn">☰</button>
+    
+    <!-- Main Content -->
+    <div class="hero-container">
+      <div class="hero-card">
+        <h1>Register Vehicle</h1>
+        <form class="vehicle-form" method="POST" action="/register-vehicle">
+          <div class="form-group">
+            <input type="text" name="licensePlate" placeholder="License Plate" required />
+          </div>
+          <div class="form-group">
+            <input type="text" name="model" placeholder="Model" required />
+          </div>
+          <div class="form-group">
+            <input type="text" name="type" placeholder="Type" required />
+          </div>
+          <button type="submit" class="btn btn-primary vehicle-btn">
+            Register Vehicle
+          </button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Bottom Wave Background -->
+    <div class="bottom-wave">
+      <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#111" fill-opacity="1" d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+      </svg>
+    </div>
+    
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Sidebar persistence code
+      const sidebar = document.getElementById("sidebar");
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const closeBtn = document.getElementById("closeBtn");
+      
+      document.addEventListener("DOMContentLoaded", () => {
+        if (localStorage.getItem("sidebarOpen") === "true") {
+          sidebar.classList.add("active");
+        }
+      });
+      
+      hamburgerBtn.addEventListener("click", () => {
+        sidebar.classList.add("active");
+        localStorage.setItem("sidebarOpen", "true");
+      });
+      
+      closeBtn.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        localStorage.setItem("sidebarOpen", "false");
+      });
+    </script>
+  </body>
+</html>
