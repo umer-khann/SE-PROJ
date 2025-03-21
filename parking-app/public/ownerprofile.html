@@ -402,6 +402,7 @@
           if (newPassword !== confirmPassword) {
             messageEl.textContent =
               "New password and confirmation do not match.";
+              messageEl.style.color = "white"; // or use "#fff"
             return;
           }
           try {
@@ -415,6 +416,7 @@
             const result = await res.json();
             if (res.ok) {
               messageEl.textContent = "Password updated successfully!";
+              messageEl.style.color = "white"; // or use "#fff"
               setTimeout(() => {
                 modal.style.display = "none";
                 document.getElementById("changePasswordForm").reset();
@@ -422,10 +424,12 @@
             } else {
               messageEl.textContent =
                 result.error || "Error updating password.";
+                messageEl.style.color = "white"; // or use "#fff"
             }
           } catch (error) {
             console.error("Error changing password:", error);
             messageEl.textContent = "An error occurred. Please try again.";
+            messageEl.style.color = "white"; // or use "#fff"
           }
         });
     </script>

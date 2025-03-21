@@ -77,6 +77,9 @@
       }
       .reservation-list {
         margin-top: 1.5rem;
+        /* Set a max height and make it scrollable */
+        max-height: 500px;
+        overflow-y: auto;
       }
       .reservation-item {
         background: rgba(0, 0, 0, 0.3);
@@ -223,7 +226,7 @@
         localStorage.setItem("sidebarOpen", "false");
       });
 
-      // Fetch reservations (example code)
+      // Fetch reservations
       async function loadReservations() {
         try {
           const response = await fetch("/my-reservations-data");
@@ -247,10 +250,9 @@
               <p><strong>To:</strong> ${new Date(
                 res.endTime
               ).toLocaleString()}</p>
-              <p><strong>Cost(Rs):</strong> ${new Number(
+              <p><strong>Cost (Rs):</strong> ${new Number(
                 res.cost
               ).toLocaleString()}</p>
-
               <form method="POST" action="/cancel-reservation">
                 <input type="hidden" name="id" value="${res._id}">
                 <button type="submit" class="btn btn-danger">Cancel Reservation</button>
