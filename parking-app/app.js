@@ -40,8 +40,8 @@ app.use(
 // -----------------------------
 
 // Landing Page (Role Selection)
-app.get("/landing.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "landing.html"));
+app.get("/index.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Authentication Routes
@@ -143,13 +143,13 @@ app.post("/owner/register", async (req, res) => {
 // Logout
 app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.redirect("/landing.html");
+  res.redirect("/index.html");
 });
 
 // Middleware for authentication/role-checking
 function isAuthenticated(req, res, next) {
   if (req.session.userId) return next();
-  res.redirect("/landing.html");
+  res.redirect("/index.html");
 }
 function isAdmin(req, res, next) {
   if (req.session.userRole === "admin") return next();
@@ -188,21 +188,26 @@ app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
   try {
     // Retrieve parking spaces from MongoDB
     const spaces = await ParkingSpace.find();
-    
+
     // Path to your static HTML file in the public folder
     const filePath = path.join(__dirname, "public", "bookParking.html");
-    
+
     fs.readFile(filePath, "utf8", (err, htmlData) => {
       if (err) {
         return res.status(500).send("Error reading file: " + err.message);
       }
-      
+
       // Create a script tag that defines a global variable "parkingSpaces"
-      const injection = `<script>var parkingSpaces = ${JSON.stringify(spaces)};</script>`;
-      
+      const injection = `<script>var parkingSpaces = ${JSON.stringify(
+        spaces
+      )};</script>`;
+
       // Replace the placeholder in the HTML file with the injection script
-      const modifiedHTML = htmlData.replace("<!-- PARKING_SPACES_DATA -->", injection);
-      
+      const modifiedHTML = htmlData.replace(
+        "<!-- PARKING_SPACES_DATA -->",
+        injection
+      );
+
       // Send the modified HTML to the client
       res.send(modifiedHTML);
     });
@@ -235,7 +240,7 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
     res.status(500).send("Error booking parking space: " + error.message);
   }
 });
-    
+
 app.get("/myReservations.html", isAuthenticated, isOwner, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "myReservations.html"));
 });
