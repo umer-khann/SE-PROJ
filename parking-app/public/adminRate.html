@@ -38,12 +38,19 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      /* Container (Main Content) */
-      .container {
+      /* Main Content - Center the Form Box */
+      .main-content {
         position: relative;
         z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 40px);
+      }
+      /* Container for the form */
+      .container {
         max-width: 600px;
-        margin: 0 auto;
+        width: 100%;
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(10px);
         border-radius: 20px;
@@ -64,12 +71,12 @@
         border-bottom: 2px solid #555;
         color: #fff;
         padding: 0.5rem;
+        width: 100%;
       }
       .form-control:focus {
         outline: none;
         border-bottom-color: #1a73e8;
       }
-      /* Placeholder styling: always visible until typing */
       .form-control::placeholder {
         color: #ccc;
         opacity: 1;
@@ -154,6 +161,15 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .container {
+          padding: 1.5rem;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -173,11 +189,9 @@
       <div class="close-btn" id="closeBtn">&times;</div>
       <h2>Admin Menu</h2>
       <ul>
-      
         <li><a href="adminParking.html">Parking Setup</a></li>
         <li><a href="adminStatus.html">Parking Status</a></li>
         <li><a href="adminRate.html">Set Parking Rates</a></li>
-        
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
@@ -185,49 +199,51 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
 
-    <!-- Main Content -->
-    <div class="container">
-      <h1>Set Parking Rates</h1>
-      <form method="POST" action="/admin/set-rates">
-        <div class="form-group">
-          <input
-            type="text"
-            name="vehicleType"
-            class="form-control"
-            placeholder="Vehicle Type"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="text"
-            name="rateType"
-            class="form-control"
-            placeholder="Rate Type (hourly/daily)"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="number"
-            step="0.01"
-            name="rate"
-            class="form-control"
-            placeholder="Rate (USD)"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="number"
-            step="0.01"
-            name="discount"
-            class="form-control"
-            placeholder="Discount (if any)"
-          />
-        </div>
-        <button type="submit" class="btn btn-custom">Set Rate</button>
-      </form>
+    <!-- Main Content - Centered Box -->
+    <div class="main-content">
+      <div class="container">
+        <h1>Set Parking Rates</h1>
+        <form method="POST" action="/admin/set-rates">
+          <div class="form-group">
+            <input
+              type="text"
+              name="vehicleType"
+              class="form-control"
+              placeholder="Vehicle Type"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              name="rateType"
+              class="form-control"
+              placeholder="Rate Type (hourly/daily)"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              step="0.01"
+              name="rate"
+              class="form-control"
+              placeholder="Rate (USD)"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              step="0.01"
+              name="discount"
+              class="form-control"
+              placeholder="Discount (if any)"
+            />
+          </div>
+          <button type="submit" class="btn btn-custom">Set Rate</button>
+        </form>
+      </div>
     </div>
 
     <!-- Bottom Wave Background -->
@@ -248,7 +264,7 @@
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
 
-      // On page load, check sidebar state
+      // On page load, check if the sidebar should be open
       document.addEventListener("DOMContentLoaded", () => {
         const isSidebarOpen = localStorage.getItem("sidebarOpen");
         if (isSidebarOpen === "true") {

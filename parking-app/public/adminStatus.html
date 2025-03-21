@@ -38,10 +38,17 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      /* Container (Main Content) */
-      .container {
+      /* Main Content - Center the Container */
+      .main-content {
         position: relative;
         z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 40px);
+      }
+      /* Container (Main Content Box) */
+      .container {
         max-width: 800px;
         margin: 0 auto;
         background: rgba(255, 255, 255, 0.07);
@@ -127,6 +134,15 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .container {
+          padding: 1.5rem;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -146,11 +162,9 @@
       <div class="close-btn" id="closeBtn">&times;</div>
       <h2>Admin Menu</h2>
       <ul>
-      
         <li><a href="adminParking.html">Parking Setup</a></li>
         <li><a href="adminStatus.html">Parking Status</a></li>
         <li><a href="adminRate.html">Set Parking Rates</a></li>
-        
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
@@ -158,10 +172,12 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
 
-    <!-- Main Content -->
-    <div class="container">
-      <h1>Parking Status</h1>
-      <div id="statusList"></div>
+    <!-- Main Content - Centered Box -->
+    <div class="main-content">
+      <div class="container">
+        <h1>Parking Status</h1>
+        <div id="statusList"></div>
+      </div>
     </div>
 
     <!-- Bottom Wave Background -->

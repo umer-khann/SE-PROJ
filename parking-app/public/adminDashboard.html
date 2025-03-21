@@ -19,25 +19,31 @@
         background: linear-gradient(180deg, #111 0%, #222 100%);
         color: #fff;
         min-height: 100vh;
-        overflow: hidden;
+        overflow-x: hidden;
         padding: 20px;
         position: relative;
       }
-      /* Wave Backgrounds */
-      .top-wave,
-      .bottom-wave {
+
+      /* Creative Wave Backgrounds using CSS clip-path */
+      .wave {
         position: absolute;
         left: 0;
         width: 100%;
-        z-index: 1;
+        height: 150px;
+        background-color: #111;
+        z-index: 0;
       }
+      /* Top wave: A downward curve */
       .top-wave {
         top: 0;
+        clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%);
       }
+      /* Bottom wave: An upward curve */
       .bottom-wave {
         bottom: 0;
-        transform: rotate(180deg);
+        clip-path: polygon(0 40%, 50% 0, 100% 40%, 100% 100%, 0 100%);
       }
+
       /* Sidebar */
       .sidebar {
         position: fixed;
@@ -87,27 +93,77 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-      /* Main Content */
+
+      /* Main Content: Center the Card */
       .main-content {
         position: relative;
         z-index: 2;
+        min-height: calc(100vh - 40px);
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%;
       }
+
+      /* Neon Pulse Animation */
+      @keyframes neonPulse {
+        0% {
+          box-shadow: 0 0 8px rgba(26, 115, 232, 0.3),
+                      0 0 15px rgba(156, 227, 240, 0.1);
+        }
+        50% {
+          box-shadow: 0 0 12px rgba(26, 115, 232, 0.5),
+                      0 0 25px rgba(156, 227, 240, 0.2);
+        }
+        100% {
+          box-shadow: 0 0 8px rgba(26, 115, 232, 0.3),
+                      0 0 15px rgba(156, 227, 240, 0.1);
+        }
+      }
+
+      /* Dashboard Card */
       .dashboard-card {
-        background: rgba(255, 255, 255, 0.07);
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.07),
+          rgba(255, 255, 255, 0.02)
+        );
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        padding: 2rem;
+        padding: 3rem 4rem;
         margin: 0 auto;
-        max-width: 600px;
+        max-width: 650px;
         text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: fadeIn 1.2s ease forwards, neonPulse 3s infinite ease-in-out;
       }
       .dashboard-card h1 {
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
+        font-size: 2.8rem;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #223d41 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 5px rgba(20, 50, 55, 0.8),
+                     0 0 10px rgba(19, 41, 71, 0.6);
       }
+      .dashboard-card p {
+        font-weight: 300;
+        color: #ddd;
+        font-size: 1.2rem;
+        line-height: 1.6;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -124,15 +180,26 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .dashboard-card {
+          width: 90%;
+          padding: 2rem;
+        }
+        .dashboard-card h1 {
+          font-size: 2.2rem;
+        }
+        .dashboard-card p {
+          font-size: 1rem;
+        }
+      }
     </style>
   </head>
   <body>
-    <!-- Top Wave Background -->
-    <div class="top-wave">
-      <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#111" fill-opacity="1" d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
-      </svg>
-    </div>
+    <!-- Top Wave Background using CSS -->
+    <div class="wave top-wave"></div>
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -144,46 +211,50 @@
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
+
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
+
     <!-- Main Content -->
     <div class="main-content">
       <div class="dashboard-card">
         <h1>Welcome, Admin!</h1>
-        <p>Use the navigation menu on the left to manage everything.</p>
+        <p>
+          Use the navigation menu on the left to manage everything.
+          <br />
+          Keep track of parking spaces, reservations, and more—right at your fingertips!
+        </p>
       </div>
     </div>
-    <!-- Bottom Wave Background -->
-    <div class="bottom-wave">
-      <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#111" fill-opacity="1" d="M0,160L80,144C160,128,320,96,480,101.3C640,107,800,149,960,149.3C1120,149,1280,107,1360,85.3L1440,64L1440,250L1360,250C1280,250,1120,250,960,250C800,250,640,250,480,250C320,250,160,250,80,250L0,250Z"></path>
-      </svg>
-    </div>
+
+    <!-- Bottom Wave Background using CSS -->
+    <div class="wave bottom-wave"></div>
+
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Grab sidebar elements
-      const sidebar = document.getElementById('sidebar');
-      const hamburgerBtn = document.getElementById('hamburgerBtn');
-      const closeBtn = document.getElementById('closeBtn');
+      const sidebar = document.getElementById("sidebar");
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const closeBtn = document.getElementById("closeBtn");
 
       // On page load, check if the sidebar should be open
-      document.addEventListener('DOMContentLoaded', () => {
-        const isSidebarOpen = localStorage.getItem('sidebarOpen');
-        if (isSidebarOpen === 'true') {
-          sidebar.classList.add('active');
+      document.addEventListener("DOMContentLoaded", () => {
+        const isSidebarOpen = localStorage.getItem("sidebarOpen");
+        if (isSidebarOpen === "true") {
+          sidebar.classList.add("active");
         }
       });
 
       // Open sidebar
-      hamburgerBtn.addEventListener('click', () => {
-        sidebar.classList.add('active');
-        localStorage.setItem('sidebarOpen', 'true');
+      hamburgerBtn.addEventListener("click", () => {
+        sidebar.classList.add("active");
+        localStorage.setItem("sidebarOpen", "true");
       });
 
       // Close sidebar
-      closeBtn.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        localStorage.setItem('sidebarOpen', 'false');
+      closeBtn.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        localStorage.setItem("sidebarOpen", "false");
       });
     </script>
   </body>

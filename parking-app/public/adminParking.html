@@ -40,10 +40,18 @@
         transform: rotate(180deg);
       }
 
-      /* Container (Main Content) */
-      .container {
+      /* Main Content - Center the Container */
+      .main-content {
         position: relative;
         z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 40px); /* Adjust if needed */
+      }
+
+      /* Container for the form */
+      .container {
         max-width: 600px;
         margin: 0 auto;
         background: rgba(255, 255, 255, 0.07);
@@ -74,10 +82,8 @@
         outline: none;
         border-bottom-color: #1a73e8;
       }
-
-      /* Make placeholder text visible against the dark background */
       .form-control::placeholder {
-        color: #ccc; /* or #fff if you want it brighter */
+        color: #ccc;
         opacity: 1;
       }
 
@@ -101,7 +107,7 @@
       .sidebar {
         position: fixed;
         top: 0;
-        left: -250px; /* hidden by default */
+        left: -250px;
         width: 250px;
         height: 100%;
         background-color: #111;
@@ -183,11 +189,9 @@
       <div class="close-btn" id="closeBtn">&times;</div>
       <h2>Admin Menu</h2>
       <ul>
-        
         <li><a href="adminParking.html">Parking Setup</a></li>
         <li><a href="adminStatus.html">Parking Status</a></li>
         <li><a href="adminRate.html">Set Parking Rates</a></li>
-       
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
@@ -195,39 +199,41 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
 
-    <!-- Main Content -->
-    <div class="container">
-      <h1>Create Parking Space</h1>
-      <form method="POST" action="/create-parking-space">
-        <div class="form-group">
-          <input
-            type="number"
-            name="number"
-            class="form-control"
-            placeholder="Number of Spaces"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="text"
-            name="type"
-            class="form-control"
-            placeholder="Type (e.g., compact, large)"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="text"
-            name="rules"
-            class="form-control"
-            placeholder="Parking Rules"
-            required
-          />
-        </div>
-        <button type="submit" class="btn btn-custom">Create Spaces</button>
-      </form>
+    <!-- Main Content - Centered Form -->
+    <div class="main-content">
+      <div class="container">
+        <h1>Create Parking Space</h1>
+        <form method="POST" action="/create-parking-space">
+          <div class="form-group">
+            <input
+              type="number"
+              name="number"
+              class="form-control"
+              placeholder="Number of Spaces"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              name="type"
+              class="form-control"
+              placeholder="Type (e.g., compact, large)"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              name="rules"
+              class="form-control"
+              placeholder="Parking Rules"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-custom">Create Spaces</button>
+        </form>
+      </div>
     </div>
 
     <!-- Bottom Wave Background -->

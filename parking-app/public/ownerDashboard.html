@@ -23,6 +23,7 @@
         padding: 20px;
         position: relative;
       }
+
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -38,6 +39,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
+
       /* Sidebar Styles */
       .sidebar {
         position: fixed;
@@ -87,6 +89,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
+
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -103,29 +106,79 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
-      /* Main Content Styles */
+
+      /* Main Content: Centered Card */
       .main-content {
         position: relative;
         z-index: 2;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%;
+        min-height: calc(100vh - 40px);
       }
+
+      /* Fade-In Animation */
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Dashboard Card with a Subtle Glow */
       .dashboard-card {
-        background: rgba(255, 255, 255, 0.07);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.07),
+          rgba(255, 255, 255, 0.02)
+        );
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        padding: 2rem;
+        padding: 3rem 4rem; /* Increased padding */
         margin: 0 auto;
-        max-width: 600px;
+        max-width: 700px;  /* Increased max-width from 600px to 700px */
         text-align: center;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 1.2s ease forwards;
       }
+
+      /* Gradient Heading with a Glow */
       .dashboard-card h1 {
         margin-bottom: 1rem;
+        font-size: 2.2rem;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 5px rgba(156, 227, 240, 0.8),
+          0 0 10px rgba(26, 115, 232, 0.6);
       }
+
+      /* Paragraph Styling */
       .dashboard-card p {
         font-size: 1rem;
+        font-weight: 300;
+        color: #ddd;
+        line-height: 1.6;
+        margin: 1rem 0 0 0;
+      }
+
+      /* Responsive Tweaks */
+      @media (max-width: 768px) {
+        .dashboard-card {
+          padding: 2rem;
+          max-width: 90%;
+        }
+        .dashboard-card h1 {
+          font-size: 1.8rem;
+        }
+        .dashboard-card p {
+          font-size: 0.9rem;
+        }
       }
     </style>
   </head>
@@ -140,6 +193,7 @@
         ></path>
       </svg>
     </div>
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -152,9 +206,11 @@
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
+
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-    <!-- Main Content -->
+
+    <!-- Main Content - Centered Dashboard Card -->
     <div class="main-content">
       <div class="dashboard-card">
         <h1>Welcome, Vehicle Owner!</h1>
@@ -164,6 +220,7 @@
         </p>
       </div>
     </div>
+
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -174,6 +231,7 @@
         ></path>
       </svg>
     </div>
+
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Grab sidebar elements
