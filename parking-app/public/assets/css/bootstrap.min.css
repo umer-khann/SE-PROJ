@@ -201,6 +201,7 @@ body {
   color: var(--bs-body-color);
   text-align: var(--bs-body-text-align);
   background-color: var(--bs-body-bg);
+  overflow: auto;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
@@ -227,10 +228,10 @@ h6 {
   margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
-  color: var(--bs-heading-color);
 }
 .profile-info {
   font-weight: 1000;
+  color: #9ce3f0;
 }
 .h1,
 h1 {

@@ -31,8 +31,13 @@
         width: 100%;
         z-index: 1;
       }
-      .top-wave { top: 0; }
-      .bottom-wave { bottom: 0; transform: rotate(180deg); }
+      .top-wave {
+        top: 0;
+      }
+      .bottom-wave {
+        bottom: 0;
+        transform: rotate(180deg);
+      }
       /* Container for Main Content */
       .container {
         position: relative;
@@ -47,6 +52,8 @@
       h1 {
         text-align: center;
         margin-bottom: 1.5rem;
+        font-weight: 700;
+        color: #9ce3f0;
       }
       .form-group {
         margin-bottom: 1.5rem;
@@ -147,12 +154,14 @@
     <!-- Top Wave Background -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#111" fill-opacity="1"
-          d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z">
-        </path>
+        <path
+          fill="#111"
+          fill-opacity="1"
+          d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+        ></path>
       </svg>
     </div>
-    
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -161,20 +170,26 @@
         <li><a href="registerVehicle.html">Register Vehicle</a></li>
         <li><a href="bookParking.html">Book Parking</a></li>
         <li><a href="myReservations.html">My Reservations</a></li>
+        <li><a href="ownerprofile.html">My Profile</a></li>
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
-    
+
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-    
+
     <!-- Main Content -->
     <div class="container">
       <h1>Book a Parking Space</h1>
       <form method="POST" action="/book-parking">
         <div class="form-group">
           <label for="parkingSpaceId">Select Parking Space:</label>
-          <select name="parkingSpaceId" id="parkingSpaceId" class="form-control" required>
+          <select
+            name="parkingSpaceId"
+            id="parkingSpaceId"
+            class="form-control"
+            required
+          >
             <option value="">Loading parking spaces...</option>
           </select>
         </div>
@@ -186,51 +201,63 @@
         </div>
         <div class="form-group">
           <label style="margin-bottom: 0.5rem">Start Time:</label>
-          <input type="datetime-local" name="startTime" class="form-control" required />
+          <input
+            type="datetime-local"
+            name="startTime"
+            class="form-control"
+            required
+          />
         </div>
         <div class="form-group">
           <label style="margin-bottom: 0.5rem">End Time:</label>
-          <input type="datetime-local" name="endTime" class="form-control" required />
+          <input
+            type="datetime-local"
+            name="endTime"
+            class="form-control"
+            required
+          />
         </div>
         <button type="submit" class="btn btn-custom">Book Parking Space</button>
       </form>
     </div>
-    
+
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#111" fill-opacity="1"
-          d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z">
-        </path>
+        <path
+          fill="#111"
+          fill-opacity="1"
+          d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+        ></path>
       </svg>
     </div>
-    
+
     <!-- Inject parking spaces and user vehicles data here -->
     <!-- PARKING_SPACES_DATA -->
-    
+
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-      
+
       document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
-      
+
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-      
+
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");
       });
-      
+
       // Populate Parking Spaces Dropdown
       function populateParkingSpaces() {
         const select = document.getElementById("parkingSpaceId");
@@ -245,7 +272,7 @@
           defaultOption.textContent = "Select a parking space";
           defaultOption.value = "";
           select.appendChild(defaultOption);
-          parkingSpaces.forEach(space => {
+          parkingSpaces.forEach((space) => {
             const option = document.createElement("option");
             option.textContent = `${space.type} - ${space.rules}`;
             option.value = space._id;
@@ -253,7 +280,7 @@
           });
         }
       }
-      
+
       // Populate User Vehicles Dropdown using the injected global variable "userVehicles"
       function populateUserVehicles() {
         const carSelect = document.getElementById("carSelect");
@@ -268,7 +295,7 @@
           defaultOption.textContent = "Select your car";
           defaultOption.value = "";
           carSelect.appendChild(defaultOption);
-          userVehicles.forEach(vehicle => {
+          userVehicles.forEach((vehicle) => {
             const option = document.createElement("option");
             option.textContent = `${vehicle.licensePlate} - ${vehicle.model}`;
             option.value = vehicle._id;
@@ -276,7 +303,7 @@
           });
         }
       }
-      
+
       // Initialize dropdowns on page load
       document.addEventListener("DOMContentLoaded", function () {
         populateParkingSpaces();

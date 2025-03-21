@@ -324,6 +324,33 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
   }
 });
 
+app.post("/owner/change-password", isAuthenticated, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    // Use req.session.userId instead of req.user._id
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check the old password (plain text comparison shown for demo)
+    if (user.password !== oldPassword) {
+      return res.status(400).json({ error: "Incorrect current password" });
+    }
+
+    // Update the password. In production, hash the new password before saving.
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Error updating password: " + error.message });
+  }
+});
+
 app.get("/owner/profile-data", isAuthenticated, isOwner, async (req, res) => {
   try {
     const owner = await User.findOne({
