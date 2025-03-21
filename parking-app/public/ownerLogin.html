@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Owner Login</title>
+    <title>Admin Login</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -130,7 +130,6 @@
       .login-form input:focus::placeholder {
         opacity: 0;
       }
-      /* Animated underline on focus */
       .login-form .form-group::after {
         content: "";
         position: absolute;
@@ -193,7 +192,7 @@
     <div class="hero-container">
       <div class="hero-card">
         <h1>Owner Login</h1>
-        <form class="login-form" method="POST" action="/owner/dashboard">
+        <form class="login-form" method="POST" action="/owner/login">
           <div class="form-group">
             <input type="text" name="username" placeholder="Username" required />
           </div>
