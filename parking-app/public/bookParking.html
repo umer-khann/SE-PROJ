@@ -179,6 +179,12 @@
           </select>
         </div>
         <div class="form-group">
+          <label for="carSelect">Select Your Car:</label>
+          <select name="vehicle" id="carSelect" class="form-control" required>
+            <option value="">Loading your cars...</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label style="margin-bottom: 0.5rem">Start Time:</label>
           <input type="datetime-local" name="startTime" class="form-control" required />
         </div>
@@ -199,12 +205,12 @@
       </svg>
     </div>
     
-    <!-- Inject parking spaces data here -->
+    <!-- Inject parking spaces and user vehicles data here -->
     <!-- PARKING_SPACES_DATA -->
     
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Sidebar persistence code
+      // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
@@ -225,7 +231,7 @@
         localStorage.setItem("sidebarOpen", "false");
       });
       
-      // Use the injected parkingSpaces variable to populate the dropdown
+      // Populate Parking Spaces Dropdown
       function populateParkingSpaces() {
         const select = document.getElementById("parkingSpaceId");
         select.innerHTML = "";
@@ -247,7 +253,35 @@
           });
         }
       }
-      populateParkingSpaces();
+      
+      // Populate User Vehicles Dropdown using the injected global variable "userVehicles"
+      function populateUserVehicles() {
+        const carSelect = document.getElementById("carSelect");
+        carSelect.innerHTML = "";
+        if (!userVehicles || userVehicles.length === 0) {
+          const option = document.createElement("option");
+          option.textContent = "No registered vehicles found";
+          option.value = "";
+          carSelect.appendChild(option);
+        } else {
+          const defaultOption = document.createElement("option");
+          defaultOption.textContent = "Select your car";
+          defaultOption.value = "";
+          carSelect.appendChild(defaultOption);
+          userVehicles.forEach(vehicle => {
+            const option = document.createElement("option");
+            option.textContent = `${vehicle.licensePlate} - ${vehicle.model}`;
+            option.value = vehicle._id;
+            carSelect.appendChild(option);
+          });
+        }
+      }
+      
+      // Initialize dropdowns on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        populateParkingSpaces();
+        populateUserVehicles();
+      });
     </script>
   </body>
 </html>

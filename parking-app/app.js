@@ -12,6 +12,7 @@ const ParkingSpace = require("./models/ParkingSpace");
 const Reservation = require("./models/Reservation");
 const ParkingRate = require("./models/ParkingRate");
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -184,10 +185,13 @@ app.post("/register-vehicle", isAuthenticated, isOwner, async (req, res) => {
     res.status(500).send("Error registering vehicle: " + error.message);
   }
 });
+// GET route to serve bookParking.html with parking spaces and user cars injected
 app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
   try {
     // Retrieve parking spaces from MongoDB
     const spaces = await ParkingSpace.find();
+    // Retrieve only the logged-in user's vehicles from MongoDB using the Vehicle model
+    const vehicles = await Vehicle.find({ owner: req.session.userId });
 
     // Path to your static HTML file in the public folder
     const filePath = path.join(__dirname, "public", "bookParking.html");
@@ -197,16 +201,14 @@ app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
         return res.status(500).send("Error reading file: " + err.message);
       }
 
-      // Create a script tag that defines a global variable "parkingSpaces"
-      const injection = `<script>var parkingSpaces = ${JSON.stringify(
-        spaces
-      )};</script>`;
+      // Create a script tag that defines global variables for parkingSpaces and userVehicles
+      const injection = `<script>
+        var parkingSpaces = ${JSON.stringify(spaces)};
+        var userVehicles = ${JSON.stringify(vehicles)};
+      </script>`;
 
       // Replace the placeholder in the HTML file with the injection script
-      const modifiedHTML = htmlData.replace(
-        "<!-- PARKING_SPACES_DATA -->",
-        injection
-      );
+      const modifiedHTML = htmlData.replace("<!-- PARKING_SPACES_DATA -->", injection);
 
       // Send the modified HTML to the client
       res.send(modifiedHTML);
@@ -216,23 +218,41 @@ app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
   }
 });
 
-// Updated: POST /book-parking to use the parkingSpaceId from the form
 app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
   try {
-    const { parkingSpaceId, startTime, endTime } = req.body;
-    // Retrieve the parking space directly from the DB using its ID
+    const { parkingSpaceId, startTime, endTime, vehicle } = req.body;
+
+    // Retrieve the parking space by its ID
     const parkingSpace = await ParkingSpace.findById(parkingSpaceId);
     if (!parkingSpace) {
       return res.status(404).send("Selected parking space not available.");
     }
+
+    // Check if the parking space has available capacity
+    if (parkingSpace.initialCapacity <= 0) {
+      return res.status(400).send("No available capacity for this parking space.");
+    }
+
+    // Retrieve the selected vehicle ensuring it belongs to the logged-in user
+    const userVehicle = await Vehicle.findOne({ _id: vehicle, owner: req.session.userId });
+    if (!userVehicle) {
+      return res.status(400).send("Invalid vehicle selection.");
+    }
+
+    // Create a new reservation linking the parking space and the user's selected vehicle
     const newReservation = new Reservation({
       user: req.session.userId,
-      vehicle: null, // In production, link to the owner’s vehicle
+      vehicle: userVehicle._id,
       parkingSpace: parkingSpace._id,
       startTime: new Date(startTime),
       endTime: new Date(endTime),
     });
+
     await newReservation.save();
+
+    // Decrease the parking space's available capacity by 1
+    await ParkingSpace.findByIdAndUpdate(parkingSpaceId, { $inc: { number: -1 } });
+
     res.send(
       `Parking space booked! Reservation ID: ${newReservation._id} <a href="/ownerDashboard.html">Back to Dashboard</a>`
     );
@@ -240,6 +260,8 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
     res.status(500).send("Error booking parking space: " + error.message);
   }
 });
+
+
 
 app.get("/myReservations.html", isAuthenticated, isOwner, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "myReservations.html"));
@@ -295,14 +317,31 @@ app.post(
 app.get("/adminStatus.html", isAuthenticated, isAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "adminStatus.html"));
 });
+
 app.get("/admin/status-data", isAuthenticated, isAdmin, async (req, res) => {
   try {
-    const spaces = await ParkingSpace.find();
-    res.json(spaces);
+    // Fetch parking spaces as plain objects
+    const spaces = await ParkingSpace.find().lean();
+
+    // For each parking space, count the number of reservations and calculate capacity left.
+    const updatedSpaces = await Promise.all(
+      spaces.map(async (space) => {
+        // Count reservations for this parking space.
+        const reservedCount = await Reservation.countDocuments({ parkingSpace: space._id });
+        // Calculate remaining capacity.
+        const capacityLeft = space.initialCapacity - reservedCount;
+        // Return updated space data (you can include any additional fields as needed)
+        return { ...space, capacityLeft };
+      })
+    );
+
+    res.json(updatedSpaces);
   } catch (error) {
     res.status(500).send("Error retrieving parking status: " + error.message);
   }
 });
+
+
 app.get("/adminRate.html", isAuthenticated, isAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "adminRate.html"));
 });
