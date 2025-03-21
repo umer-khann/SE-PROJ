@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
     <style>
-      /* Base styling using your wave design */
+      /* Base styling using a dark neon theme */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
@@ -25,12 +25,14 @@
         overflow: hidden;
         color: #fff;
       }
+      /* Waves styling */
       .top-wave,
       .bottom-wave {
         position: absolute;
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -39,6 +41,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
+      /* Container */
       .hero-container {
         position: relative;
         z-index: 2;
@@ -49,171 +52,172 @@
         align-items: center;
         justify-content: center;
       }
+      /* Glassmorphism Card */
       .hero-card {
         background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(15px);
         border-radius: 40px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        padding: 3.5rem;
         text-align: center;
         width: 100%;
         max-width: 700px;
-        animation: fadeIn 1.2s ease forwards;
+        animation: fadeIn 1.5s ease forwards;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(26, 115, 232, 0.2) 0%, transparent 70%);
+        animation: glowPulse 6s infinite alternate;
+        z-index: -1;
+      }
+      @keyframes glowPulse {
+        0% { transform: scale(1); opacity: 0.5; }
+        100% { transform: scale(1.2); opacity: 0.8; }
       }
       @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
       }
+      /* Heading */
       .hero-card h1 {
         font-weight: 600;
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        letter-spacing: 2px;
+        font-size: 2.8rem;
+        margin-bottom: 2rem;
+        letter-spacing: 3px;
         text-transform: uppercase;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 5px rgba(156, 227, 240, 0.8),
+                     0 0 10px rgba(26, 115, 232, 0.6);
       }
       .login-form {
         width: 100%;
-        max-width: 350px;
+        max-width: 400px;
         margin: 0 auto;
         text-align: left;
       }
       .login-form .form-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
       }
       .login-form input {
         background: transparent;
         border: none;
         border-bottom: 2px solid #555;
         width: 100%;
-        padding: 10px 5px;
+        padding: 12px 5px;
         color: #fff;
-        font-size: 1rem;
+        font-size: 1.1rem;
+        transition: border-bottom-color 0.3s ease;
       }
       .login-form input:focus {
         outline: none;
         border-bottom-color: #1a73e8;
       }
-      .login-form ::placeholder {
+      .login-form input::placeholder {
         color: #aaa;
+        transition: opacity 0.3s ease;
+      }
+      .login-form input:focus::placeholder {
+        opacity: 0;
+      }
+      /* Animated underline on focus */
+      .login-form .form-group::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #1a73e8;
+        transition: width 0.4s ease;
+      }
+      .login-form input:focus + .form-group::after,
+      .login-form input:focus ~ .form-group::after {
+        width: 100%;
       }
       .login-btn {
         width: 100%;
-        height: 45px;
+        height: 50px;
         font-weight: 600;
         background-color: #1a73e8;
         border: none;
-        border-radius: 5px;
-        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 25px;
+        transition: transform 0.3s, box-shadow 0.3s;
         color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 0 15px rgba(26, 115, 232, 0.5);
       }
       .login-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(26, 115, 232, 0.8);
       }
       @media (max-width: 768px) {
         .hero-card {
-          padding: 2rem;
+          padding: 2.5rem;
         }
         .hero-card h1 {
-          font-size: 2rem;
+          font-size: 2.2rem;
         }
-      }
-      /* Overlay for registration confirmation */
-      #confirmationOverlay {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(26, 115, 232, 0.95);
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        font-size: 1rem;
-        z-index: 9999;
-        opacity: 1;
-        transition: opacity 1s ease;
       }
     </style>
   </head>
   <body>
-    <!-- Overlay element for registration confirmation -->
+    <!-- Confirmation Overlay (optional) -->
     <div id="confirmationOverlay" style="display: none">
       Owner registered successfully!
     </div>
 
+    <!-- Top Wave -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
-          fill="#111"
+          fill="#0d1b2a"
           fill-opacity="1"
-          d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+          d="M0,96L80,85.3C160,75,320,64,480,74.7C640,85,800,107,960,117.3C1120,128,1280,128,1360,117.3L1440,107L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
         ></path>
       </svg>
     </div>
+
+    <!-- Hero Container -->
     <div class="hero-container">
       <div class="hero-card">
         <h1>Owner Login</h1>
-        <form class="login-form" method="POST" action="/owner/login">
+        <form class="login-form" method="POST" action="/owner/dashboard">
           <div class="form-group">
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              required
-            />
+            <input type="text" name="username" placeholder="Username" required />
           </div>
           <div class="form-group">
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-            />
+            <input type="password" name="password" placeholder="Password" required />
           </div>
           <button type="submit" class="btn btn-primary login-btn">Login</button>
         </form>
-        <p style="margin-top: 1rem">
+        <p style="margin-top: 1.5rem; font-size: 0.9rem;">
           Don't have an account?
-          <a href="ownerRegister.html" style="color: #1a73e8">Register here</a>
+          <a href="ownerRegister.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">Register here</a>
         </p>
       </div>
     </div>
+
+    <!-- Bottom Wave -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
-          fill="#111"
+          fill="#0d1b2a"
           fill-opacity="1"
           d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
         ></path>
       </svg>
     </div>
-    <script>
-      // Check for query parameter "registered" on page load
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("registered") === "true") {
-        const overlay = document.getElementById("confirmationOverlay");
-        overlay.style.display = "block";
-        // Start fade-out after a short delay
-        setTimeout(() => {
-          overlay.style.opacity = "0";
-          // After the transition finishes (1s), hide the overlay and clean the URL
-          setTimeout(() => {
-            overlay.style.display = "none";
-            window.history.replaceState(
-              {},
-              document.title,
-              window.location.pathname
-            );
-          }, 1000);
-        }, 2000); // show overlay for 2 seconds before starting fade out
-      }
-    </script>
   </body>
 </html>

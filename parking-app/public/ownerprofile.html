@@ -14,7 +14,7 @@
       rel="stylesheet"
     />
     <style>
-      /* Global and Body Styles */
+      /* Global & Body Styles */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
@@ -23,8 +23,8 @@
         position: relative;
         overflow: hidden;
         color: #fff;
-        padding: 20px;
       }
+
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -32,6 +32,7 @@
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -40,16 +41,19 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      /* Sidebar Styles */
+
+      /* Sidebar */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background-color: #111;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -81,7 +85,7 @@
         transition: background 0.2s;
       }
       .sidebar ul li a:hover {
-        background-color: #333;
+        background-color: rgba(255, 255, 255, 0.1);
       }
       .close-btn {
         font-size: 1.5rem;
@@ -89,6 +93,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
+
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -105,24 +110,60 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
-      /* Owner Profile Container */
-      .container {
+
+      /* Hero Container (centers the card & ensures waves stay behind) */
+      .hero-container {
         position: relative;
         z-index: 2;
-        max-width: 800px;
         width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+        min-height: 100vh; /* full vertical space */
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Glassmorphism Card */
+      .hero-card {
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(10px);
         border-radius: 20px;
         padding: 2rem;
-        margin: 0 auto;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 1.2s ease forwards;
+        width: 100%;
+        max-width: 800px;
       }
-      h1 {
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Page Heading with Neon Gradient */
+      .hero-card h1 {
         text-align: center;
         margin-bottom: 1.5rem;
-        color: #007bff;
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 5px rgba(156, 227, 240, 0.8),
+          0 0 10px rgba(26, 115, 232, 0.6);
       }
-      h3 {
+
+      /* Profile Sections */
+      .profile-section h3 {
         margin-bottom: 1rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -131,6 +172,8 @@
         font-size: 1.1rem;
         margin: 0.3rem 0;
       }
+
+      /* Vehicle Table */
       table {
         width: 100%;
         border-collapse: collapse;
@@ -143,8 +186,10 @@
         padding: 8px;
       }
       th {
-        background-color: #007bff;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        color: #fff;
       }
+
       /* Modal Styles for Change Password */
       .modal {
         display: none;
@@ -158,14 +203,15 @@
         background-color: rgba(0, 0, 0, 0.5);
       }
       .modal-content {
-        background-color: #1e1c23;
+        background-color: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(10px);
         margin: 10% auto;
         padding: 20px;
-        border: 1px solid #888;
         width: 90%;
         max-width: 400px;
         border-radius: 5px;
-        color: #000;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
       .modal-header {
         display: flex;
@@ -174,8 +220,8 @@
       }
       .modal-header h4 {
         margin: 0;
-        color: #fff;
         font-weight: 700;
+        text-transform: uppercase;
       }
       .close {
         color: #aaa;
@@ -188,22 +234,40 @@
       .close:hover,
       .close:focus {
         color: #000;
-        text-decoration: none;
       }
+      .modal .form-control {
+        background: white;
+        border: none;
+        border-bottom: 2px solid #555;
+        color: #000000;
+        margin-bottom: 1rem;
+      }
+      .modal .form-control:focus {
+        outline: none;
+        border-bottom-color: #1a73e8;
+      }
+      .modal button[type="submit"] {
+        background-color: #1a73e8;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-weight: 600;
+        width: 100%;
+        height: 40px;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .modal button[type="submit"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Responsive Adjustments */
       @media (max-width: 768px) {
-        .container {
-          padding: 1rem;
+        .hero-card {
+          padding: 1.5rem;
         }
-        h1 {
-          font-size: 2rem;
-          font-weight: 700;
-          font-family: Verdana, Geneva, Tahoma, sans-serif;
-        }
-        .profile-info {
-          margin-top: 0;
-          margin-bottom: 0.5rem;
-          font-weight: 1000;
-          line-height: 1.2;
+        .hero-card h1 {
+          font-size: 1.8rem;
         }
       }
     </style>
@@ -236,73 +300,34 @@
       </svg>
     </div>
 
-    <!-- Main Container -->
-    <div class="container">
-      <h1 class="profile-info">Your Profile</h1>
+    <!-- Hero Container -->
+    <div class="hero-container">
+      <!-- Hero Card -->
+      <div class="hero-card">
+        <h1>Your Profile</h1>
 
-      <!-- Personal Information Section -->
-      <div class="profile-section">
-        <h3>Personal Information</h3>
-        <div class="profile-details">
-          <p id="ownerName">Name: Loading...</p>
-          <p id="ownerContact">Contact: Loading...</p>
-          <p id="ownerEmail">Username/Email: Loading...</p>
+        <!-- Personal Information -->
+        <div class="profile-section">
+          <h3>Personal Information</h3>
+          <div class="profile-details">
+            <p id="ownerName">Name: Loading...</p>
+            <p id="ownerContact">Contact: Loading...</p>
+            <p id="ownerEmail">Username/Email: Loading...</p>
+          </div>
         </div>
-      </div>
 
-      <!-- Vehicle Information Section -->
-       <br></br>
-      <div class="vehicle-section">
-        <h3>Your Vehicles</h3>
-        <div id="vehicleList">Loading vehicles...</div>
-      </div>
-
-      <!-- Change Password Button -->
-      <div style="text-align: center; margin-top: 2rem">
-        <button id="openPasswordModal" class="btn btn-secondary">
-          Change Password
-        </button>
-      </div>
-    </div>
-
-    <!-- Password Change Modal -->
-    <div id="passwordModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4>Change Password</h4>
-          <button class="close" id="closeModal">&times;</button>
+        <!-- Vehicle Information -->
+        <div class="vehicle-section" style="margin-top: 1.5rem">
+          <h3>Your Vehicles</h3>
+          <div id="vehicleList">Loading vehicles...</div>
         </div>
-        <form id="changePasswordForm">
-          <div class="mb-3">
-            <input
-              type="password"
-              id="oldPassword"
-              class="form-control"
-              placeholder="Current Password"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <input
-              type="password"
-              id="newPassword"
-              class="form-control"
-              placeholder="New Password"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <input
-              type="password"
-              id="confirmPassword"
-              class="form-control"
-              placeholder="Confirm New Password"
-              required
-            />
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <div id="passwordMessage" style="margin-top: 1rem"></div>
-        </form>
+
+        <!-- Change Password Button -->
+        <div style="text-align: center; margin-top: 2rem">
+          <button id="openPasswordModal" class="btn btn-secondary">
+            Change Password
+          </button>
+        </div>
       </div>
     </div>
 
@@ -317,26 +342,65 @@
       </svg>
     </div>
 
+    <!-- Change Password Modal -->
+    <div id="passwordModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Change Password</h4>
+          <button class="close" id="closeModal">&times;</button>
+        </div>
+        <form id="changePasswordForm">
+          <input
+            type="password"
+            id="oldPassword"
+            class="form-control"
+            placeholder="Current Password"
+            required
+          />
+          <input
+            type="password"
+            id="newPassword"
+            class="form-control"
+            placeholder="New Password"
+            required
+          />
+          <input
+            type="password"
+            id="confirmPassword"
+            class="form-control"
+            placeholder="Confirm New Password"
+            required
+          />
+          <button type="submit">Submit</button>
+          <div id="passwordMessage" style="margin-top: 1rem"></div>
+        </form>
+      </div>
+    </div>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Sidebar handling
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
+
       document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
+
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
+
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");
       });
 
-      // Fetch the owner profile data and update the page.
+      // Fetch the owner profile data
       async function loadProfile() {
         try {
           const res = await fetch("/owner/profile-data");
@@ -347,6 +411,7 @@
             "Contact: " + data.owner.contact;
           document.getElementById("ownerEmail").textContent =
             "Username/Email: " + data.owner.username;
+
           const vehicleListEl = document.getElementById("vehicleList");
           if (data.vehicles && data.vehicles.length > 0) {
             let tableHTML =
@@ -388,7 +453,7 @@
         }
       });
 
-      // Handle Password Change Form Submission
+      // Handle Password Change
       document
         .getElementById("changePasswordForm")
         .addEventListener("submit", async (e) => {
@@ -399,12 +464,14 @@
             document.getElementById("confirmPassword").value;
           const messageEl = document.getElementById("passwordMessage");
           messageEl.textContent = "";
+
           if (newPassword !== confirmPassword) {
             messageEl.textContent =
               "New password and confirmation do not match.";
-              messageEl.style.color = "white"; // or use "#fff"
+            messageEl.style.color = "#fff";
             return;
           }
+
           try {
             const res = await fetch("/owner/change-password", {
               method: "POST",
@@ -416,7 +483,7 @@
             const result = await res.json();
             if (res.ok) {
               messageEl.textContent = "Password updated successfully!";
-              messageEl.style.color = "white"; // or use "#fff"
+              messageEl.style.color = "#fff";
               setTimeout(() => {
                 modal.style.display = "none";
                 document.getElementById("changePasswordForm").reset();
@@ -424,12 +491,12 @@
             } else {
               messageEl.textContent =
                 result.error || "Error updating password.";
-                messageEl.style.color = "white"; // or use "#fff"
+              messageEl.style.color = "#fff";
             }
           } catch (error) {
             console.error("Error changing password:", error);
             messageEl.textContent = "An error occurred. Please try again.";
-            messageEl.style.color = "white"; // or use "#fff"
+            messageEl.style.color = "#fff";
           }
         });
     </script>

@@ -30,6 +30,7 @@
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -38,7 +39,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      /* Main Content - Center the Form Box */
+      /* Main Content - Centered Container */
       .main-content {
         position: relative;
         z-index: 2;
@@ -47,20 +48,38 @@
         justify-content: center;
         min-height: calc(100vh - 40px);
       }
-      /* Container for the form */
+      /* Glassmorphism Container */
       .container {
         max-width: 600px;
         width: 100%;
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        padding: 2rem;
+        padding: 2rem 3rem;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 1.2s ease forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       h1 {
         text-align: center;
         margin-bottom: 1.5rem;
         color: #9ce3f0;
         font-weight: 700;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 5px rgba(156, 227, 240, 0.8),
+                     0 0 10px rgba(26, 115, 232, 0.6);
       }
       .form-group {
         margin-bottom: 1.5rem;
@@ -72,6 +91,7 @@
         color: #fff;
         padding: 0.5rem;
         width: 100%;
+        transition: border-bottom-color 0.3s ease;
       }
       .form-control:focus {
         outline: none;
@@ -95,16 +115,18 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
-      /* Sidebar Styles */
+      /* Sidebar with Glassmorphism */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background-color: #111;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -137,7 +159,7 @@
         transition: background 0.2s;
       }
       .sidebar ul li a:hover {
-        background-color: #333;
+        background-color: rgba(255, 255, 255, 0.1);
       }
       .close-btn {
         font-size: 1.5rem;
@@ -165,6 +187,7 @@
       @media (max-width: 768px) {
         .container {
           padding: 1.5rem;
+          max-width: 90%;
         }
         h1 {
           font-size: 2rem;
@@ -183,7 +206,7 @@
         ></path>
       </svg>
     </div>
-
+    
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -195,11 +218,11 @@
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
-
+    
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-
-    <!-- Main Content - Centered Box -->
+    
+    <!-- Main Content - Centered Container -->
     <div class="main-content">
       <div class="container">
         <h1>Set Parking Rates</h1>
@@ -245,7 +268,7 @@
         </form>
       </div>
     </div>
-
+    
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -256,29 +279,26 @@
         ></path>
       </svg>
     </div>
-
+    
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Get sidebar elements
+      // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-
-      // On page load, check if the sidebar should be open
+      
       document.addEventListener("DOMContentLoaded", () => {
         const isSidebarOpen = localStorage.getItem("sidebarOpen");
         if (isSidebarOpen === "true") {
           sidebar.classList.add("active");
         }
       });
-
-      // Open sidebar and save state
+      
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-
-      // Close sidebar and save state
+      
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");

@@ -12,24 +12,24 @@
       rel="stylesheet"
     />
     <style>
-      /* Global Styles */
+      /* Global Body & Font */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
         background: linear-gradient(180deg, #111 0%, #222 100%);
         color: #fff;
-        min-height: 100vh;
         position: relative;
         overflow: hidden;
-        padding: 20px;
       }
-      /* Wave Backgrounds */
+
+      /* Waves */
       .top-wave,
       .bottom-wave {
         position: absolute;
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -38,23 +38,31 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      /* Container for Main Content */
+
+      /* Hero Container to center everything vertically */
       .hero-container {
         position: relative;
         z-index: 2;
         width: 100%;
         max-width: 900px;
-        padding: 2rem;
         margin: 0 auto;
+        padding: 2rem;
+        min-height: 100vh; /* Full vertical space */
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
+
+      /* Glassmorphism Card */
       .hero-card {
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(10px);
         border-radius: 40px;
-        padding: 2rem;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        padding: 2rem;
+        width: 100%;
         animation: fadeIn 1.2s ease forwards;
-        font-weight: 700;
       }
       @keyframes fadeIn {
         from {
@@ -66,19 +74,25 @@
           transform: translateY(0);
         }
       }
+
       .hero-card h1 {
         text-align: center;
         margin-bottom: 1.5rem;
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color: #9ce3f0;
         font-weight: 700;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 5px rgba(156, 227, 240, 0.8),
+          0 0 10px rgba(26, 115, 232, 0.6);
       }
+
+      /* Reservations List */
       .reservation-list {
         margin-top: 1.5rem;
-        /* Set a max height and make it scrollable */
-        max-height: 500px;
+        max-height: 500px; /* scrollable area if many reservations */
         overflow-y: auto;
       }
       .reservation-item {
@@ -87,16 +101,19 @@
         margin-bottom: 1rem;
         border-radius: 8px;
       }
-      /* Sidebar Styles */
+
+      /* Sidebar (Glassmorphism) */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background-color: #111;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -128,7 +145,7 @@
         transition: background 0.2s;
       }
       .sidebar ul li a:hover {
-        background-color: #333;
+        background-color: rgba(255, 255, 255, 0.1);
       }
       .close-btn {
         font-size: 1.5rem;
@@ -136,6 +153,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
+
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -151,6 +169,16 @@
       }
       .hamburger-btn:hover {
         transform: scale(1.1);
+      }
+
+      /* Responsive Tweaks */
+      @media (max-width: 768px) {
+        .hero-card {
+          padding: 1.5rem;
+        }
+        .hero-card h1 {
+          font-size: 1.8rem;
+        }
       }
     </style>
   </head>
@@ -182,7 +210,7 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
 
-    <!-- Main Content -->
+    <!-- Hero Container & Card -->
     <div class="hero-container">
       <div class="hero-card">
         <h1>My Reservations</h1>
@@ -233,7 +261,7 @@
           if (!response.ok) throw new Error("Failed to fetch reservations");
           const reservations = await response.json();
           const container = document.getElementById("reservations");
-          if (reservations.length === 0) {
+          if (!reservations || reservations.length === 0) {
             container.innerHTML = "<p>No reservations found.</p>";
             return;
           }
@@ -244,15 +272,9 @@
             div.innerHTML = `
               <p><strong>ID:</strong> ${res._id}</p>
               <p><strong>Parking Space:</strong> ${res.parkingSpace}</p>
-              <p><strong>From:</strong> ${new Date(
-                res.startTime
-              ).toLocaleString()}</p>
-              <p><strong>To:</strong> ${new Date(
-                res.endTime
-              ).toLocaleString()}</p>
-              <p><strong>Cost (Rs):</strong> ${new Number(
-                res.cost
-              ).toLocaleString()}</p>
+              <p><strong>From:</strong> ${new Date(res.startTime).toLocaleString()}</p>
+              <p><strong>To:</strong> ${new Date(res.endTime).toLocaleString()}</p>
+              <p><strong>Cost (Rs):</strong> ${new Number(res.cost).toLocaleString()}</p>
               <form method="POST" action="/cancel-reservation">
                 <input type="hidden" name="id" value="${res._id}">
                 <button type="submit" class="btn btn-danger">Cancel Reservation</button>

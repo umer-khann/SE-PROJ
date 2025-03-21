@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
     <style>
-      /* Base styling using your wave design */
+      /* Base styling using a dark neon theme */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
@@ -25,12 +25,15 @@
         overflow: hidden;
         color: #fff;
       }
+
+      /* Waves styling */
       .top-wave,
       .bottom-wave {
         position: absolute;
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -39,6 +42,8 @@
         bottom: 0;
         transform: rotate(180deg);
       }
+
+      /* Container */
       .hero-container {
         position: relative;
         z-index: 2;
@@ -49,74 +54,129 @@
         align-items: center;
         justify-content: center;
       }
+
+      /* Glassmorphism Card */
       .hero-card {
         background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(15px);
         border-radius: 40px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        padding: 3.5rem;
         text-align: center;
         width: 100%;
         max-width: 700px;
-        animation: fadeIn 1.2s ease forwards;
+        animation: fadeIn 1.5s ease forwards;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(26, 115, 232, 0.2) 0%, transparent 70%);
+        animation: glowPulse 6s infinite alternate;
+        z-index: -1;
+      }
+      @keyframes glowPulse {
+        0% { transform: scale(1); opacity: 0.5; }
+        100% { transform: scale(1.2); opacity: 0.8; }
       }
       @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
       }
+
+      /* Heading */
       .hero-card h1 {
         font-weight: 600;
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        letter-spacing: 2px;
+        font-size: 2.8rem;
+        margin-bottom: 2rem;
+        letter-spacing: 3px;
         text-transform: uppercase;
       }
+
+      /* Login Form */
       .login-form {
         width: 100%;
-        max-width: 350px;
+        max-width: 400px;
         margin: 0 auto;
         text-align: left;
       }
       .login-form .form-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
       }
       .login-form input {
         background: transparent;
         border: none;
         border-bottom: 2px solid #555;
         width: 100%;
-        padding: 10px 5px;
+        padding: 12px 5px;
         color: #fff;
-        font-size: 1rem;
+        font-size: 1.1rem;
+        transition: border-bottom-color 0.3s ease;
       }
       .login-form input:focus {
         outline: none;
         border-bottom-color: #1a73e8;
       }
-      .login-form ::placeholder {
+      .login-form input::placeholder {
         color: #aaa;
+        transition: opacity 0.3s ease;
       }
+      .login-form input:focus::placeholder {
+        opacity: 0;
+      }
+      /* Animated underline on focus */
+      .login-form .form-group::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #1a73e8;
+        transition: width 0.4s ease;
+      }
+      .login-form input:focus + .form-group::after,
+      .login-form input:focus ~ .form-group::after {
+        width: 100%;
+      }
+
+      /* Login Button */
       .login-btn {
         width: 100%;
-        height: 45px;
+        height: 50px;
         font-weight: 600;
         background-color: #1a73e8;
         border: none;
-        border-radius: 5px;
-        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 25px;
+        transition: transform 0.3s, box-shadow 0.3s;
         color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 0 15px rgba(26, 115, 232, 0.5);
       }
       .login-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(26, 115, 232, 0.8);
       }
-      /* Overlay for confirmation message (if desired) */
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .hero-card {
+          padding: 2.5rem;
+        }
+        .hero-card h1 {
+          font-size: 2.2rem;
+        }
+      }
+
+      /* Confirmation Overlay */
       #confirmationOverlay {
         position: fixed;
         top: 20px;
@@ -133,20 +193,13 @@
         transition: opacity 1s ease;
         display: none;
       }
-      @media (max-width: 768px) {
-        .hero-card {
-          padding: 2rem;
-        }
-        .hero-card h1 {
-          font-size: 2rem;
-        }
-      }
     </style>
   </head>
   <body>
-    <!-- Optional overlay if you want to display a confirmation -->
+    <!-- Confirmation Overlay -->
     <div id="confirmationOverlay"></div>
 
+    <!-- Top Wave -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -156,6 +209,8 @@
         ></path>
       </svg>
     </div>
+
+    <!-- Main Content -->
     <div class="hero-container">
       <div class="hero-card">
         <h1>Admin Login</h1>
@@ -180,10 +235,12 @@
         </form>
         <p style="margin-top: 1rem">
           Don't have an account?
-          <a href="adminRegister.html" style="color: #1a73e8">Register here</a>
+          <a href="adminRegister.html" style="color: #1a73e8; text-decoration: none;">Register here</a>
         </p>
       </div>
     </div>
+
+    <!-- Bottom Wave -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -193,8 +250,9 @@
         ></path>
       </svg>
     </div>
+
     <script>
-      // Check for query parameter "registered" to optionally show a confirmation overlay
+      // Check for "registered" query parameter to show a confirmation overlay
       const params = new URLSearchParams(window.location.search);
       if (params.get("registered") === "true") {
         const overlay = document.getElementById("confirmationOverlay");
@@ -204,11 +262,7 @@
           overlay.style.opacity = "0";
           setTimeout(() => {
             overlay.style.display = "none";
-            window.history.replaceState(
-              {},
-              document.title,
-              window.location.pathname
-            );
+            window.history.replaceState({}, document.title, window.location.pathname);
           }, 1000);
         }, 2000);
       }

@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
     <style>
-      /* Global Styles */
+      /* Base Body Styling */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
@@ -21,15 +21,16 @@
         color: #fff;
         position: relative;
         overflow: hidden;
-        padding: 20px;
       }
-      /* Wave Backgrounds */
+
+      /* Waves */
       .top-wave,
       .bottom-wave {
         position: absolute;
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -38,25 +39,65 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      /* Container for Main Content */
-      .container {
+
+      /* Hero Container (centers everything) */
+      .hero-container {
         position: relative;
         z-index: 2;
-        max-width: 600px;
+        width: 100%;
+        max-width: 900px;
+        padding: 2rem;
         margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh; /* ensures full vertical space */
+        box-sizing: border-box;
+      }
+
+      /* Glassmorphism Card */
+      .hero-card {
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        padding: 2rem;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 700px;
+        padding: 2rem 3rem;
+        animation: fadeIn 1.2s ease forwards;
       }
-      h1 {
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Heading Styling */
+      .hero-card h1 {
         text-align: center;
         margin-bottom: 1.5rem;
         font-weight: 700;
-        color: #9ce3f0;
+        font-size: 2rem;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 5px rgba(156, 227, 240, 0.8),
+          0 0 10px rgba(26, 115, 232, 0.6);
       }
+
+      /* Form Elements */
       .form-group {
         margin-bottom: 1.5rem;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
       }
       .form-control {
         background: transparent;
@@ -64,11 +105,14 @@
         border-bottom: 2px solid #555;
         color: #fff;
         padding: 0.5rem;
+        width: 100%;
+        transition: border-bottom-color 0.3s ease;
       }
       .form-control:focus {
         outline: none;
         border-bottom-color: #1a73e8;
       }
+
       .btn-custom {
         width: 100%;
         height: 45px;
@@ -83,18 +127,21 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
-      /* Sidebar Styles */
+
+      /* Sidebar with Glassmorphism */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background-color: #111;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
         transition: left 0.3s ease;
-        z-index: 1000;
+        z-index: 1200;
       }
       .sidebar.active {
         left: 0;
@@ -124,7 +171,7 @@
         transition: background 0.2s;
       }
       .sidebar ul li a:hover {
-        background-color: #333;
+        background-color: rgba(255, 255, 255, 0.1);
       }
       .close-btn {
         font-size: 1.5rem;
@@ -132,6 +179,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
+
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -147,6 +195,16 @@
       }
       .hamburger-btn:hover {
         transform: scale(1.1);
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .hero-card {
+          padding: 2rem;
+        }
+        .hero-card h1 {
+          font-size: 1.8rem;
+        }
       }
     </style>
   </head>
@@ -178,47 +236,54 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
 
-    <!-- Main Content -->
-    <div class="container">
-      <h1>Book a Parking Space</h1>
-      <form method="POST" action="/book-parking">
-        <div class="form-group">
-          <label for="parkingSpaceId">Select Parking Space:</label>
-          <select
-            name="parkingSpaceId"
-            id="parkingSpaceId"
-            class="form-control"
-            required
-          >
-            <option value="">Loading parking spaces...</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="carSelect">Select Your Car:</label>
-          <select name="vehicle" id="carSelect" class="form-control" required>
-            <option value="">Loading your cars...</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label style="margin-bottom: 0.5rem">Start Time:</label>
-          <input
-            type="datetime-local"
-            name="startTime"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label style="margin-bottom: 0.5rem">End Time:</label>
-          <input
-            type="datetime-local"
-            name="endTime"
-            class="form-control"
-            required
-          />
-        </div>
-        <button type="submit" class="btn btn-custom">Book Parking Space</button>
-      </form>
+    <!-- Hero Container & Card -->
+    <div class="hero-container">
+      <div class="hero-card">
+        <h1>Book a Parking Space</h1>
+        <form method="POST" action="/book-parking">
+          <div class="form-group">
+            <label for="parkingSpaceId">Select Parking Space:</label>
+            <select
+              name="parkingSpaceId"
+              id="parkingSpaceId"
+              class="form-control"
+              required
+            >
+              <option value="">Loading parking spaces...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="carSelect">Select Your Car:</label>
+            <select
+              name="vehicle"
+              id="carSelect"
+              class="form-control"
+              required
+            >
+              <option value="">Loading your cars...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Start Time:</label>
+            <input
+              type="datetime-local"
+              name="startTime"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>End Time:</label>
+            <input
+              type="datetime-local"
+              name="endTime"
+              class="form-control"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-custom">Book Parking Space</button>
+        </form>
+      </div>
     </div>
 
     <!-- Bottom Wave Background -->
@@ -232,7 +297,6 @@
       </svg>
     </div>
 
-    <!-- Inject parking spaces and user vehicles data here -->
     <!-- PARKING_SPACES_DATA -->
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -281,7 +345,7 @@
         }
       }
 
-      // Populate User Vehicles Dropdown using the injected global variable "userVehicles"
+      // Populate User Vehicles Dropdown
       function populateUserVehicles() {
         const carSelect = document.getElementById("carSelect");
         carSelect.innerHTML = "";

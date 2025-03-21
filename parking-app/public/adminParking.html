@@ -23,7 +23,7 @@
         overflow: hidden;
         padding: 20px;
       }
-
+      
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -31,6 +31,7 @@
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -39,33 +40,55 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-
-      /* Main Content - Center the Container */
+      
+      /* Main Content - Centered Form Container */
       .main-content {
         position: relative;
         z-index: 2;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: calc(100vh - 40px); /* Adjust if needed */
+        min-height: calc(100vh - 40px);
       }
-
-      /* Container for the form */
+      
+      /* Glassmorphism Container */
       .container {
         max-width: 600px;
         margin: 0 auto;
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        padding: 2rem;
+        padding: 2rem 3rem;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        animation: fadeIn 1.2s ease forwards;
       }
+      
+      /* Fade-In Animation */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Heading with Neon Accent */
       h1 {
         text-align: center;
         margin-bottom: 1.5rem;
         color: #9ce3f0;
         font-weight: 700;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 5px rgba(156, 227, 240, 0.8),
+                     0 0 10px rgba(26, 115, 232, 0.6);
       }
-
+      
       /* Form Group & Inputs */
       .form-group {
         margin-bottom: 1.5rem;
@@ -77,6 +100,8 @@
         border-bottom: 2px solid #555;
         color: #fff;
         padding: 0.5rem;
+        font-size: 1rem;
+        transition: border-bottom-color 0.3s ease;
       }
       .form-control:focus {
         outline: none;
@@ -84,10 +109,9 @@
       }
       .form-control::placeholder {
         color: #ccc;
-        opacity: 1;
       }
-
-      /* Button */
+      
+      /* Custom Button */
       .btn-custom {
         width: 100%;
         height: 45px;
@@ -102,17 +126,19 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
-
-      /* Sidebar Styles */
+      
+      /* Sidebar Styles (Glassmorphism-inspired) */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background-color: #111;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -120,8 +146,7 @@
         left: 0;
       }
       .sidebar h2 {
-        margin-top: 0;
-        margin-bottom: 1.5rem;
+        margin: 0 0 1.5rem 0;
         font-size: 1.5rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -145,7 +170,7 @@
         transition: background 0.2s;
       }
       .sidebar ul li a:hover {
-        background-color: #333;
+        background-color: rgba(255, 255, 255, 0.1);
       }
       .close-btn {
         font-size: 1.5rem;
@@ -153,7 +178,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-
+      
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -183,7 +208,7 @@
         ></path>
       </svg>
     </div>
-
+    
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -195,11 +220,11 @@
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
-
+    
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-
-    <!-- Main Content - Centered Form -->
+    
+    <!-- Main Content - Centered Form Container -->
     <div class="main-content">
       <div class="container">
         <h1>Create Parking Space</h1>
@@ -235,7 +260,7 @@
         </form>
       </div>
     </div>
-
+    
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -246,29 +271,26 @@
         ></path>
       </svg>
     </div>
-
+    
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Get sidebar elements
+      // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-
-      // On page load, check if the sidebar should be open
+      
       document.addEventListener("DOMContentLoaded", () => {
         const isSidebarOpen = localStorage.getItem("sidebarOpen");
         if (isSidebarOpen === "true") {
           sidebar.classList.add("active");
         }
       });
-
-      // Open sidebar and save state
+      
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-
-      // Close sidebar and save state
+      
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");

@@ -23,7 +23,7 @@
         padding: 20px;
         position: relative;
       }
-
+      
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -31,6 +31,7 @@
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -39,17 +40,19 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-
-      /* Sidebar Styles */
+      
+      /* Sidebar with Glassmorphism */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background-color: #111;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -78,10 +81,11 @@
         display: block;
         padding: 0.5rem 0.8rem;
         border-radius: 5px;
-        transition: background 0.2s;
+        transition: background 0.2s, transform 0.2s;
       }
       .sidebar ul li a:hover {
-        background-color: #333;
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
       }
       .close-btn {
         font-size: 1.5rem;
@@ -89,7 +93,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-
+      
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -106,8 +110,8 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
-
-      /* Main Content: Centered Card */
+      
+      /* Main Content: Centered Dashboard Card */
       .main-content {
         position: relative;
         z-index: 2;
@@ -116,7 +120,7 @@
         justify-content: center;
         min-height: calc(100vh - 40px);
       }
-
+      
       /* Fade-In Animation */
       @keyframes fadeIn {
         0% {
@@ -128,25 +132,21 @@
           transform: translateY(0);
         }
       }
-
-      /* Dashboard Card with a Subtle Glow */
+      
+      /* Dashboard Card with Glassmorphism and Neon Glow */
       .dashboard-card {
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.07),
-          rgba(255, 255, 255, 0.02)
-        );
+        background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        padding: 3rem 4rem; /* Increased padding */
+        padding: 3rem 4rem;
         margin: 0 auto;
-        max-width: 700px;  /* Increased max-width from 600px to 700px */
+        max-width: 700px;
         text-align: center;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
         animation: fadeIn 1.2s ease forwards;
       }
-
-      /* Gradient Heading with a Glow */
+      
+      /* Gradient Heading with Neon Glow */
       .dashboard-card h1 {
         margin-bottom: 1rem;
         font-size: 2.2rem;
@@ -157,7 +157,7 @@
         text-shadow: 0 0 5px rgba(156, 227, 240, 0.8),
           0 0 10px rgba(26, 115, 232, 0.6);
       }
-
+      
       /* Paragraph Styling */
       .dashboard-card p {
         font-size: 1rem;
@@ -166,7 +166,7 @@
         line-height: 1.6;
         margin: 1rem 0 0 0;
       }
-
+      
       /* Responsive Tweaks */
       @media (max-width: 768px) {
         .dashboard-card {
@@ -193,7 +193,7 @@
         ></path>
       </svg>
     </div>
-
+    
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -206,21 +206,20 @@
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
-
+    
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-
+    
     <!-- Main Content - Centered Dashboard Card -->
     <div class="main-content">
       <div class="dashboard-card">
         <h1>Welcome, Vehicle Owner!</h1>
         <p>
-          Manage your vehicles and parking reservations using the menu on the
-          left.
+          Manage your vehicles and parking reservations using the menu on the left.
         </p>
       </div>
     </div>
-
+    
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -231,29 +230,26 @@
         ></path>
       </svg>
     </div>
-
+    
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Grab sidebar elements
+      // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-
-      // On page load, check if the sidebar should be open
+      
       document.addEventListener("DOMContentLoaded", () => {
         const isSidebarOpen = localStorage.getItem("sidebarOpen");
         if (isSidebarOpen === "true") {
           sidebar.classList.add("active");
         }
       });
-
-      // Open sidebar and save state
+      
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-
-      // Close sidebar and save state
+      
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");

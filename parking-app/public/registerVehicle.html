@@ -12,6 +12,7 @@
       rel="stylesheet"
     />
     <style>
+      /* Global Styles */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
@@ -24,6 +25,7 @@
         overflow: hidden;
         color: #fff;
       }
+      
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -31,6 +33,7 @@
         left: 0;
         width: 100%;
         z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
       .top-wave {
         top: 0;
@@ -39,6 +42,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
+      
       /* Hero Container */
       .hero-container {
         position: relative;
@@ -50,6 +54,8 @@
         align-items: center;
         justify-content: center;
       }
+      
+      /* Glassmorphism Card */
       .hero-card {
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(10px);
@@ -79,6 +85,8 @@
         text-transform: uppercase;
         color: #9ce3f0;
       }
+      
+      /* Vehicle Form Styling */
       .vehicle-form {
         width: 100%;
         max-width: 350px;
@@ -96,6 +104,7 @@
         padding: 10px 5px;
         color: #fff;
         font-size: 1rem;
+        transition: border-bottom-color 0.3s ease;
       }
       .vehicle-form input:focus {
         outline: none;
@@ -118,24 +127,19 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
-      @media (max-width: 768px) {
-        .hero-card {
-          padding: 2rem;
-        }
-        .hero-card h1 {
-          font-size: 2rem;
-        }
-      }
-      /* Sidebar Styles */
+      
+      /* Sidebar with Glassmorphism */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background-color: #111;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -167,7 +171,7 @@
         transition: background 0.2s;
       }
       .sidebar ul li a:hover {
-        background-color: #333;
+        background-color: rgba(255, 255, 255, 0.1);
       }
       .close-btn {
         font-size: 1.5rem;
@@ -175,6 +179,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
+      
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -191,6 +196,16 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
+      
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .hero-card {
+          padding: 2rem;
+        }
+        .hero-card h1 {
+          font-size: 2rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -204,7 +219,7 @@
         ></path>
       </svg>
     </div>
-
+    
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -217,10 +232,10 @@
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
-
+    
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-
+    
     <!-- Main Content -->
     <div class="hero-container">
       <div class="hero-card">
@@ -246,7 +261,7 @@
         </form>
       </div>
     </div>
-
+    
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -257,25 +272,25 @@
         ></path>
       </svg>
     </div>
-
+    
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Sidebar persistence code
+      // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-
+      
       document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
-
+      
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-
+      
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");
