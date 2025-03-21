@@ -6,6 +6,7 @@ const reservationSchema = new mongoose.Schema({
   parkingSpace: { type: mongoose.Schema.Types.ObjectId, ref: "ParkingSpace" },
   startTime: Date,
   endTime: Date,
+  cost: Number,
   createdAt: { type: Date, default: Date.now },
 });
 

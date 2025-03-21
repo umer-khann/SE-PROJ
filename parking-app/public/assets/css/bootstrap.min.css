@@ -229,6 +229,9 @@ h6 {
   line-height: 1.2;
   color: var(--bs-heading-color);
 }
+.profile-info {
+  font-weight: 1000;
+}
 .h1,
 h1 {
   font-size: calc(1.375rem + 1.5vw);

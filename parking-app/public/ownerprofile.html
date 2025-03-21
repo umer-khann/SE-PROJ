@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Owner Profile</title>
+    <!-- Local Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* General Body and Background Styles */
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(180deg, #111 0%, #222 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      /* Wave Backgrounds */
+      .top-wave,
+      .bottom-wave {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+      }
+      .top-wave {
+        top: 0;
+      }
+      .bottom-wave {
+        bottom: 0;
+        transform: rotate(180deg);
+      }
+
+      /* Glassmorphic Container */
+      .container {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #007bff;
+      }
+      h3 {
+        margin-bottom: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .profile-details p {
+        font-size: 1.1rem;
+        margin: 0.3rem 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #fff;
+        padding: 8px;
+      }
+      th {
+        background-color: #007bff;
+      }
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+        h1 {
+          font-size: 2rem;
+          font-weight: 700;
+          font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        .profile-info {
+          margin-top: 0;
+          margin-bottom: 0.5rem;
+          font-weight: 1000;
+          line-height: 1.2;
+          color: var(--bs-heading-color);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Wave -->
+    <div class="top-wave">
+      <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill="#111"
+          fill-opacity="1"
+          d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+        ></path>
+      </svg>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+      <h1 class="profile-info">Your Profile</h1>
+
+      <!-- Personal Information Section -->
+      <div class="profile-section">
+        <h3>Personal Information</h3>
+        <div class="profile-details">
+          <p id="ownerName">Name: Loading...</p>
+          <p id="ownerContact">Contact: Loading...</p>
+          <p id="ownerEmail">Username/Email: Loading...</p>
+        </div>
+      </div>
+
+      <!-- Vehicle Information Section -->
+      <div class="vehicle-section">
+        <h3>Your Vehicles</h3>
+        <div id="vehicleList">Loading vehicles...</div>
+      </div>
+    </div>
+
+    <!-- Bottom Wave -->
+    <div class="bottom-wave">
+      <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill="#111"
+          fill-opacity="1"
+          d="M0,160L80,144C160,128,320,96,480,101.3C640,107,800,149,960,149.3C1120,149,1280,107,1360,85.3L1440,64L1440,250L1360,250C1280,250,1120,250,960,250C800,250,640,250,480,250C320,250,160,250,80,250L0,250Z"
+        ></path>
+      </svg>
+    </div>
+
+    <script>
+      // Fetch the owner profile data and update the page.
+      async function loadProfile() {
+        try {
+          const res = await fetch("/owner/profile-data");
+          const data = await res.json();
+          // Update the personal information fields.
+          document.getElementById("ownerName").textContent =
+            "Name: " + data.owner.name;
+          document.getElementById("ownerContact").textContent =
+            "Contact: " + data.owner.contact;
+          document.getElementById("ownerEmail").textContent =
+            "Username/Email: " + data.owner.username;
+
+          // Update the vehicles list.
+          const vehicleListEl = document.getElementById("vehicleList");
+          if (data.vehicles && data.vehicles.length > 0) {
+            let tableHTML =
+              "<table><tr><th>License Plate</th><th>Model</th><th>Type</th></tr>";
+            data.vehicles.forEach((vehicle) => {
+              tableHTML += `<tr>
+                            <td>${vehicle.licensePlate}</td>
+                            <td>${vehicle.model}</td>
+                            <td>${vehicle.type}</td>
+                           </tr>`;
+            });
+            tableHTML += "</table>";
+            vehicleListEl.innerHTML = tableHTML;
+          } else {
+            vehicleListEl.textContent = "No vehicles registered.";
+          }
+        } catch (error) {
+          console.error("Error loading profile data:", error);
+          document.getElementById("vehicleList").textContent =
+            "Error loading profile data.";
+        }
+      }
+      document.addEventListener("DOMContentLoaded", loadProfile);
+    </script>
+  </body>
+</html>

@@ -12,7 +12,6 @@ const ParkingSpace = require("./models/ParkingSpace");
 const Reservation = require("./models/Reservation");
 const ParkingRate = require("./models/ParkingRate");
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -208,7 +207,10 @@ app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
       </script>`;
 
       // Replace the placeholder in the HTML file with the injection script
-      const modifiedHTML = htmlData.replace("<!-- PARKING_SPACES_DATA -->", injection);
+      const modifiedHTML = htmlData.replace(
+        "<!-- PARKING_SPACES_DATA -->",
+        injection
+      );
 
       // Send the modified HTML to the client
       res.send(modifiedHTML);
@@ -220,24 +222,30 @@ app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
 
 app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
   try {
+    // Expect the client to send "parkingSpaceId" instead of "type"
     const { parkingSpaceId, startTime, endTime, vehicle } = req.body;
 
-    // Retrieve the parking space by its ID
+    // Retrieve the selected vehicle ensuring it belongs to the logged-in user
+    const userVehicle = await Vehicle.findOne({
+      _id: vehicle,
+      owner: req.session.userId,
+    });
+    if (!userVehicle) {
+      return res.status(400).send("Invalid vehicle selection.");
+    }
+
+    // Retrieve the parking space using its ID
     const parkingSpace = await ParkingSpace.findById(parkingSpaceId);
     if (!parkingSpace) {
       return res.status(404).send("Selected parking space not available.");
     }
 
-    // Check if the parking space has available capacity
-    if (parkingSpace.initialCapacity <= 0) {
-      return res.status(400).send("No available capacity for this parking space.");
-    }
+    // Calculate duration in hours
+    const durationHours = (new Date(endTime) - new Date(startTime)) / 3600000;
 
-    // Retrieve the selected vehicle ensuring it belongs to the logged-in user
-    const userVehicle = await Vehicle.findOne({ _id: vehicle, owner: req.session.userId });
-    if (!userVehicle) {
-      return res.status(400).send("Invalid vehicle selection.");
-    }
+    // For simplicity, we assume a fixed rate (e.g., $100 per hour).
+    const rateData = 100;
+    const totalCost = durationHours * rateData;
 
     // Create a new reservation linking the parking space and the user's selected vehicle
     const newReservation = new Reservation({
@@ -246,22 +254,91 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
       parkingSpace: parkingSpace._id,
       startTime: new Date(startTime),
       endTime: new Date(endTime),
+      cost: new Number(totalCost),
     });
-
     await newReservation.save();
 
-    // Decrease the parking space's available capacity by 1
-    await ParkingSpace.findByIdAndUpdate(parkingSpaceId, { $inc: { number: -1 } });
+    // Update parking space available capacity (assuming 'number' holds available capacity)
+    await ParkingSpace.findByIdAndUpdate(parkingSpace._id, {
+      $inc: { number: -1 },
+    });
 
-    res.send(
-      `Parking space booked! Reservation ID: ${newReservation._id} <a href="/ownerDashboard.html">Back to Dashboard</a>`
-    );
+    // Return an HTML response that displays a bill overlay, fades out, then redirects.
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Booking Confirmation</title>
+        <style>
+          body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f2f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+          }
+          #billOverlay {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007bff;
+            color: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 1;
+            transition: opacity 1s ease;
+            z-index: 9999;
+          }
+        </style>
+      </head>
+      <body>
+        <div id="billOverlay">
+          <h2>Booking Confirmed</h2>
+          <p>Reservation ID: ${newReservation._id}</p>
+          <p>Duration: ${durationHours.toFixed(2)} hours</p>
+          <p>Rate: $${rateData.toFixed(2)} per hour</p>
+          <p>Total Cost: $${totalCost.toFixed(2)}</p>
+        </div>
+        <script>
+          // After 3 seconds, fade out the overlay and redirect to the dashboard
+          setTimeout(() => {
+            const overlay = document.getElementById("billOverlay");
+            overlay.style.opacity = "0";
+            setTimeout(() => {
+              window.location.href = "/ownerDashboard.html";
+            }, 1000);
+          }, 3000);
+        </script>
+      </body>
+      </html>
+    `);
   } catch (error) {
     res.status(500).send("Error booking parking space: " + error.message);
   }
 });
 
-
+app.get("/owner/profile-data", isAuthenticated, isOwner, async (req, res) => {
+  try {
+    const owner = await User.findOne({
+      _id: req.session.userId,
+      role: "owner",
+    });
+    const vehicles = await Vehicle.find({ owner: req.session.userId });
+    console.log("Owner data:", owner);
+    console.log("Vehicles:", vehicles);
+    res.json({ owner, vehicles });
+  } catch (error) {
+    console.error("Error in /owner/profile-data:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.get("/myReservations.html", isAuthenticated, isOwner, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "myReservations.html"));
@@ -327,7 +404,9 @@ app.get("/admin/status-data", isAuthenticated, isAdmin, async (req, res) => {
     const updatedSpaces = await Promise.all(
       spaces.map(async (space) => {
         // Count reservations for this parking space.
-        const reservedCount = await Reservation.countDocuments({ parkingSpace: space._id });
+        const reservedCount = await Reservation.countDocuments({
+          parkingSpace: space._id,
+        });
         // Calculate remaining capacity.
         const capacityLeft = space.initialCapacity - reservedCount;
         // Return updated space data (you can include any additional fields as needed)
@@ -340,7 +419,6 @@ app.get("/admin/status-data", isAuthenticated, isAdmin, async (req, res) => {
     res.status(500).send("Error retrieving parking status: " + error.message);
   }
 });
-
 
 app.get("/adminRate.html", isAuthenticated, isAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "adminRate.html"));
