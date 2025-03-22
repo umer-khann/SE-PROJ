@@ -25,7 +25,7 @@
         overflow: hidden;
         color: #fff;
       }
-
+      
       /* Waves */
       .top-wave,
       .bottom-wave {
@@ -42,7 +42,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-
+      
       /* Sidebar with Glassmorphism */
       .sidebar {
         position: fixed;
@@ -95,7 +95,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-
+      
       /* Main Content Container */
       .hero-container {
         position: relative;
@@ -107,7 +107,7 @@
         align-items: center;
         justify-content: center;
       }
-
+      
       /* Hero Card / Glassmorphism Card */
       .hero-card {
         background: rgba(255, 255, 255, 0.07);
@@ -135,24 +135,12 @@
         z-index: -1;
       }
       @keyframes glowPulse {
-        0% {
-          transform: scale(1);
-          opacity: 0.5;
-        }
-        100% {
-          transform: scale(1.2);
-          opacity: 0.8;
-        }
+        0% { transform: scale(1); opacity: 0.5; }
+        100% { transform: scale(1.2); opacity: 0.8; }
       }
       @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
       }
       .hero-card h1 {
         font-weight: 600;
@@ -221,22 +209,26 @@
         ></path>
       </svg>
     </div>
-
+    
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">×</div>
       <h2>Admin Menu</h2>
       <ul>
-        <li><a href="adminParking.html">Parking Setup</a></li>
-        <li><a href="adminStatus.html">Parking Status</a></li>
-        <li><a href="adminRate.html">Set Parking Rates</a></li>
-        <li><a href="/logout">Logout</a></li>
+        <li><a href="adminParking.html">🚧 Parking Setup</a></li>
+        <li><a href="adminStatus.html">📊 Parking Status</a></li>
+        <li>
+          <a href="adminRate.html">
+            <span style="font-weight: bold; text-transform: uppercase; color: #00A86B;">RS</span> Set Parking Rates
+          </a>
+        </li>
+        <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
-
+    
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-
+    
     <!-- Main Content -->
     <div class="hero-container">
       <div class="hero-card">
@@ -249,7 +241,7 @@
         </div>
       </div>
     </div>
-
+    
     <!-- Bottom Wave -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -260,26 +252,25 @@
         ></path>
       </svg>
     </div>
-
+    
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-
+      
       document.addEventListener("DOMContentLoaded", () => {
-        const isSidebarOpen = localStorage.getItem("sidebarOpen");
-        if (isSidebarOpen === "true") {
+        if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
-
+      
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-
+      
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");

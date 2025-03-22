@@ -85,7 +85,6 @@
         background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        
       }
       
       /* Form Group & Inputs */
@@ -213,10 +212,14 @@
       <div class="close-btn" id="closeBtn">&times;</div>
       <h2>Admin Menu</h2>
       <ul>
-        <li><a href="adminParking.html">Parking Setup</a></li>
-        <li><a href="adminStatus.html">Parking Status</a></li>
-        <li><a href="adminRate.html">Set Parking Rates</a></li>
-        <li><a href="/logout">Logout</a></li>
+        <li><a href="adminParking.html">🚧 Parking Setup</a></li>
+        <li><a href="adminStatus.html">📊 Parking Status</a></li>
+        <li>
+          <a href="adminRate.html">
+            <span style="font-weight: bold; text-transform: uppercase; color: #00A86B;">RS</span> Set Parking Rates
+          </a>
+        </li>
+        <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
     
@@ -279,8 +282,7 @@
       const closeBtn = document.getElementById("closeBtn");
       
       document.addEventListener("DOMContentLoaded", () => {
-        const isSidebarOpen = localStorage.getItem("sidebarOpen");
-        if (isSidebarOpen === "true") {
+        if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });

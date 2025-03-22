@@ -23,6 +23,7 @@
         overflow: hidden;
         padding: 20px;
       }
+      
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -39,6 +40,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
+      
       /* Main Content - Centered Container */
       .main-content {
         position: relative;
@@ -48,6 +50,7 @@
         justify-content: center;
         min-height: calc(100vh - 40px);
       }
+      
       /* Glassmorphism Container */
       .container {
         max-width: 600px;
@@ -69,6 +72,7 @@
           transform: translateY(0);
         }
       }
+      
       h1 {
         text-align: center;
         margin-bottom: 1.5rem;
@@ -78,8 +82,8 @@
         background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        
       }
+      
       .form-group {
         margin-bottom: 1.5rem;
       }
@@ -114,6 +118,7 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
+      
       /* Sidebar with Glassmorphism */
       .sidebar {
         position: fixed;
@@ -166,6 +171,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
+      
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -182,6 +188,7 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
+      
       /* Responsive Adjustments */
       @media (max-width: 768px) {
         .container {
@@ -211,10 +218,14 @@
       <div class="close-btn" id="closeBtn">&times;</div>
       <h2>Admin Menu</h2>
       <ul>
-        <li><a href="adminParking.html">Parking Setup</a></li>
-        <li><a href="adminStatus.html">Parking Status</a></li>
-        <li><a href="adminRate.html">Set Parking Rates</a></li>
-        <li><a href="/logout">Logout</a></li>
+        <li><a href="adminParking.html">🚧 Parking Setup</a></li>
+        <li><a href="adminStatus.html">📊 Parking Status</a></li>
+        <li>
+          <a href="adminRate.html">
+            <span style="font-weight: bold; text-transform: uppercase; color: #00A86B;">RS</span> Set Parking Rates
+          </a>
+        </li>
+        <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
     
@@ -250,7 +261,7 @@
               step="0.01"
               name="rate"
               class="form-control"
-              placeholder="Rate (USD)"
+              placeholder="Rate (RS)"
               required
             />
           </div>
