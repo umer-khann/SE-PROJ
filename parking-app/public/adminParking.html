@@ -230,7 +230,7 @@
     <div class="main-content">
       <div class="container">
         <h1>Create Parking Space</h1>
-        <form method="POST" action="/create-parking-space">
+        <form id="parkingForm" method="POST" action="/create-parking-space">
           <div class="form-group">
             <input
               type="number"
@@ -238,6 +238,7 @@
               class="form-control"
               placeholder="Number of Spaces"
               required
+              min="1"
             />
           </div>
           <div class="form-group">
@@ -258,6 +259,28 @@
               required
             />
           </div>
+          <div class="form-group">
+            <input
+              type="number"
+              name="rate"
+              class="form-control"
+              placeholder="Parking Rate"
+              required
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              name="discount"
+              class="form-control"
+              placeholder="Discount"
+              required
+              min="0"
+              step="0.01"
+            />
+          </div>
           <button type="submit" class="btn btn-custom">Create Spaces</button>
         </form>
       </div>
@@ -276,22 +299,67 @@
     
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
+      // Prevent negative values as the user types by resetting them automatically.
+      const numberInput = document.querySelector('input[name="number"]');
+      const rateInput = document.querySelector('input[name="rate"]');
+      const discountInput = document.querySelector('input[name="discount"]');
+
+      numberInput.addEventListener('input', function() {
+        if (this.value < 1) {
+          this.value = 1;
+        }
+      });
+
+      rateInput.addEventListener('input', function() {
+        if (this.value < 0) {
+          this.value = 0;
+        }
+      });
+
+      discountInput.addEventListener('input', function() {
+        if (this.value < 0) {
+          this.value = 0;
+        }
+      });
+
+      // JavaScript validation on form submit for extra safety
+      document.getElementById('parkingForm').addEventListener('submit', function(e) {
+        if (Number(numberInput.value) < 1) {
+          e.preventDefault();
+          alert('Number of spaces must be at least 1.');
+          numberInput.focus();
+          return;
+        }
+        if (Number(rateInput.value) < 0) {
+          e.preventDefault();
+          alert('Parking rate cannot be negative.');
+          rateInput.focus();
+          return;
+        }
+        if (Number(discountInput.value) < 0) {
+          e.preventDefault();
+          alert('Discount cannot be negative.');
+          discountInput.focus();
+          return;
+        }
+      });
+
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-      
+
       document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
-      
+
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-      
+
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");

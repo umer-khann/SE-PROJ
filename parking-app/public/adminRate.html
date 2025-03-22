@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Set Parking Rates</title>
+    <title>Admin - Parking Setup</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,7 +41,7 @@
         transform: rotate(180deg);
       }
       
-      /* Main Content - Centered Container */
+      /* Main Content - Centered Form Container */
       .main-content {
         position: relative;
         z-index: 2;
@@ -54,7 +54,7 @@
       /* Glassmorphism Container */
       .container {
         max-width: 600px;
-        width: 100%;
+        margin: 0 auto;
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(10px);
         border-radius: 20px;
@@ -62,6 +62,8 @@
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
         animation: fadeIn 1.2s ease forwards;
       }
+      
+      /* Fade-In Animation */
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -73,6 +75,7 @@
         }
       }
       
+      /* Heading with Neon Accent */
       h1 {
         text-align: center;
         margin-bottom: 1.5rem;
@@ -84,16 +87,18 @@
         -webkit-text-fill-color: transparent;
       }
       
+      /* Form Group & Inputs */
       .form-group {
         margin-bottom: 1.5rem;
       }
       .form-control {
+        width: 100%;
         background: transparent;
         border: none;
         border-bottom: 2px solid #555;
         color: #fff;
         padding: 0.5rem;
-        width: 100%;
+        font-size: 1rem;
         transition: border-bottom-color 0.3s ease;
       }
       .form-control:focus {
@@ -102,8 +107,19 @@
       }
       .form-control::placeholder {
         color: #ccc;
-        opacity: 1;
       }
+      
+      /* Remove number input spinners */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+      
+      /* Custom Button */
       .btn-custom {
         width: 100%;
         height: 45px;
@@ -119,7 +135,7 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
       
-      /* Sidebar with Glassmorphism */
+      /* Sidebar Styles (Glassmorphism-inspired) */
       .sidebar {
         position: fixed;
         top: 0;
@@ -138,8 +154,7 @@
         left: 0;
       }
       .sidebar h2 {
-        margin-top: 0;
-        margin-bottom: 1.5rem;
+        margin: 0 0 1.5rem 0;
         font-size: 1.5rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -188,17 +203,6 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
-      
-      /* Responsive Adjustments */
-      @media (max-width: 768px) {
-        .container {
-          padding: 1.5rem;
-          max-width: 90%;
-        }
-        h1 {
-          font-size: 2rem;
-        }
-      }
     </style>
   </head>
   <body>
@@ -232,49 +236,64 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
     
-    <!-- Main Content - Centered Container -->
+    <!-- Main Content - Centered Form Container -->
     <div class="main-content">
       <div class="container">
-        <h1>Set Parking Rates</h1>
-        <form method="POST" action="/admin/set-rates">
+        <h1>Create Parking Space</h1>
+        <form id="parkingForm" method="POST" action="/create-parking-space">
           <div class="form-group">
             <input
-              type="text"
-              name="vehicleType"
+              type="number"
+              name="number"
               class="form-control"
-              placeholder="Vehicle Type"
+              placeholder="Number of Spaces"
               required
+              min="1"
             />
           </div>
           <div class="form-group">
             <input
               type="text"
-              name="rateType"
+              name="type"
               class="form-control"
-              placeholder="Rate Type (hourly/daily)"
+              placeholder="Type (e.g., compact, large)"
+              required
+              pattern="[A-Za-z\s]+"
+              title="Please enter only alphabets and spaces."
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              name="rules"
+              class="form-control"
+              placeholder="Parking Rules"
               required
             />
           </div>
           <div class="form-group">
             <input
               type="number"
-              step="0.01"
               name="rate"
               class="form-control"
-              placeholder="Rate (RS)"
+              placeholder="Parking Rate"
               required
+              min="0"
+              step="0.01"
             />
           </div>
           <div class="form-group">
             <input
               type="number"
-              step="0.01"
               name="discount"
               class="form-control"
-              placeholder="Discount (if any)"
+              placeholder="Discount"
+              required
+              min="0"
+              step="0.01"
             />
           </div>
-          <button type="submit" class="btn btn-custom">Set Rate</button>
+          <button type="submit" class="btn btn-custom">Create Spaces</button>
         </form>
       </div>
     </div>
@@ -292,23 +311,60 @@
     
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
+      // JavaScript validation on form submission
+      document.getElementById('parkingForm').addEventListener('submit', function(e) {
+        const numberInput = document.querySelector('input[name="number"]');
+        const typeInput = document.querySelector('input[name="type"]');
+        const rateInput = document.querySelector('input[name="rate"]');
+        const discountInput = document.querySelector('input[name="discount"]');
+        
+        // Validate number of spaces
+        if (Number(numberInput.value) < 1) {
+          e.preventDefault();
+          alert('Number of spaces must be at least 1.');
+          numberInput.focus();
+          return;
+        }
+        // Validate type contains only alphabets and spaces
+        const typeRegex = /^[A-Za-z\s]+$/;
+        if (!typeRegex.test(typeInput.value)) {
+          e.preventDefault();
+          alert('Type must contain only alphabets and spaces.');
+          typeInput.focus();
+          return;
+        }
+        // Validate parking rate is not negative
+        if (Number(rateInput.value) < 0) {
+          e.preventDefault();
+          alert('Parking rate cannot be negative.');
+          rateInput.focus();
+          return;
+        }
+        // Validate discount is not negative
+        if (Number(discountInput.value) < 0) {
+          e.preventDefault();
+          alert('Discount cannot be negative.');
+          discountInput.focus();
+          return;
+        }
+      });
+
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-      
+
       document.addEventListener("DOMContentLoaded", () => {
-        const isSidebarOpen = localStorage.getItem("sidebarOpen");
-        if (isSidebarOpen === "true") {
+        if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
-      
+
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-      
+
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");

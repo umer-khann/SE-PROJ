@@ -296,5 +296,21 @@
         localStorage.setItem("sidebarOpen", "false");
       });
     </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector(".vehicle-form");
+        const typeInput = document.querySelector('input[name="type"]');
+    
+        form.addEventListener("submit", function (event) {
+          const typeValue = typeInput.value.trim();
+          const alphabetRegex = /^[A-Za-z]+$/;
+    
+          if (!alphabetRegex.test(typeValue)) {
+            event.preventDefault();
+            alert("Type should only contain alphabets.");
+          }
+        });
+      });
+    </script>
   </body>
 </html>

@@ -61,6 +61,9 @@
         padding: 2rem 3rem;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
         animation: fadeIn 1.2s ease forwards;
+        /* Scrollable container */
+        max-height: 70vh;
+        overflow-y: auto;
       }
       @keyframes fadeIn {
         from {
@@ -89,6 +92,25 @@
         padding: 1rem;
         margin-bottom: 1rem;
         border-radius: 8px;
+      }
+      
+      /* Custom Scrollbar Styling */
+      /* For WebKit browsers */
+      .container::-webkit-scrollbar {
+        width: 10px;
+      }
+      .container::-webkit-scrollbar-track {
+        background: #222;
+      }
+      .container::-webkit-scrollbar-thumb {
+        background-color: #1a73e8;
+        border-radius: 10px;
+        border: 2px solid #222;
+      }
+      /* For Firefox */
+      .container {
+        scrollbar-width: thin;
+        scrollbar-color: #1a73e8 #222;
       }
       
       /* Sidebar with Glassmorphism */
