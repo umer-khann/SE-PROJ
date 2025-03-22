@@ -55,12 +55,12 @@
         justify-content: center;
       }
       
-      /* Glassmorphism Card */
+      /* Updated Vehicle Registration Card */
       .hero-card {
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(10px);
-        border-radius: 40px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         padding: 3rem;
         text-align: center;
         width: 100%;
@@ -77,6 +77,8 @@
           transform: translateY(0);
         }
       }
+      
+      /* Heading */
       .hero-card h1 {
         font-weight: 600;
         font-size: 2.5rem;
@@ -128,18 +130,18 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
       
-      /* Sidebar with Glassmorphism */
+      /* Sidebar with updated style (matching the container's dark glass effect) */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(15px);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.85); /* Updated background color */
+        backdrop-filter: blur(8px);       /* Matching blur */
+        /* Removed border for a cleaner look */
         padding: 20px;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37); /* Updated box-shadow */
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -185,7 +187,7 @@
         position: fixed;
         top: 20px;
         left: 20px;
-        background: none;
+        background: rgba(255, 255, 255, 0.07);
         border: none;
         font-size: 1.5rem;
         color: #fff;
@@ -195,16 +197,6 @@
       }
       .hamburger-btn:hover {
         transform: scale(1.1);
-      }
-      
-      /* Responsive Adjustments */
-      @media (max-width: 768px) {
-        .hero-card {
-          padding: 2rem;
-        }
-        .hero-card h1 {
-          font-size: 2rem;
-        }
       }
     </style>
   </head>
@@ -236,7 +228,7 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
     
-    <!-- Main Content -->
+    <!-- Hero Container & Card -->
     <div class="hero-container">
       <div class="hero-card">
         <h1>Register Vehicle</h1>
@@ -268,7 +260,7 @@
         <path
           fill="#111"
           fill-opacity="1"
-          d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+          d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,250Z"
         ></path>
       </svg>
     </div>
@@ -279,32 +271,32 @@
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-      
+
       document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
-      
+
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-      
+
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");
       });
-    </script>
-    <script>
+
+      // Vehicle type validation (alphabet only)
       document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector(".vehicle-form");
         const typeInput = document.querySelector('input[name="type"]');
-    
+
         form.addEventListener("submit", function (event) {
           const typeValue = typeInput.value.trim();
           const alphabetRegex = /^[A-Za-z]+$/;
-    
+
           if (!alphabetRegex.test(typeValue)) {
             event.preventDefault();
             alert("Type should only contain alphabets.");

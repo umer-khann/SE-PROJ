@@ -21,7 +21,6 @@
         position: relative;
         overflow: hidden;
       }
-
       /* Waves */
       .top-wave,
       .bottom-wave {
@@ -38,7 +37,6 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-
       /* Hero Container to center everything vertically */
       .hero-container {
         position: relative;
@@ -53,13 +51,12 @@
         align-items: center;
         justify-content: center;
       }
-
-      /* Glassmorphism Card */
+      /* Updated Dashboard Card */
       .hero-card {
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(10px);
-        border-radius: 40px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         padding: 2rem;
         width: 100%;
         animation: fadeIn 1.2s ease forwards;
@@ -74,7 +71,6 @@
           transform: translateY(0);
         }
       }
-
       .hero-card h1 {
         text-align: center;
         margin-bottom: 1.5rem;
@@ -87,7 +83,6 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
-
       /* Reservations List */
       .reservation-list {
         margin-top: 1.5rem;
@@ -100,19 +95,34 @@
         margin-bottom: 1rem;
         border-radius: 8px;
       }
-
-      /* Sidebar (Glassmorphism) */
+      /* Custom Scrollbar Styling */
+      .reservation-list::-webkit-scrollbar {
+        width: 10px;
+      }
+      .reservation-list::-webkit-scrollbar-track {
+        background: #222;
+      }
+      .reservation-list::-webkit-scrollbar-thumb {
+        background-color: #1a73e8;
+        border-radius: 10px;
+        border: 2px solid #222;
+      }
+      .reservation-list {
+        scrollbar-width: thin;
+        scrollbar-color: #1a73e8 #222;
+      }
+      /* Updated Sidebar to match the dark glass container */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(15px);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.85); /* Matching container background */
+        backdrop-filter: blur(8px);       /* Matching blur */
+        /* Removed border for a cleaner look */
         padding: 20px;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37); /* Matching drop shadow */
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -152,7 +162,6 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -168,16 +177,6 @@
       }
       .hamburger-btn:hover {
         transform: scale(1.1);
-      }
-
-      /* Responsive Tweaks */
-      @media (max-width: 768px) {
-        .hero-card {
-          padding: 1.5rem;
-        }
-        .hero-card h1 {
-          font-size: 1.8rem;
-        }
       }
     </style>
   </head>
@@ -232,7 +231,7 @@
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Sidebar persistence code
+      // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
@@ -253,7 +252,7 @@
         localStorage.setItem("sidebarOpen", "false");
       });
 
-      // Fetch reservations
+      // Fetch reservations functionality
       async function loadReservations() {
         try {
           const response = await fetch("/my-reservations-data");

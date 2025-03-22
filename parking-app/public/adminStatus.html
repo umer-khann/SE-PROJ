@@ -51,17 +51,17 @@
         min-height: calc(100vh - 40px);
       }
       
-      /* Glassmorphism Container */
+      /* Updated Glassmorphism Container */
       .container {
         max-width: 800px;
         margin: 0 auto;
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        border-radius: 10px;
         padding: 2rem 3rem;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         animation: fadeIn 1.2s ease forwards;
-        /* Scrollable container */
+        /* Enable vertical scrolling if needed */
         max-height: 70vh;
         overflow-y: auto;
       }
@@ -76,6 +76,7 @@
         }
       }
       
+      /* Heading with Neon Accent */
       h1 {
         text-align: center;
         margin-bottom: 1.5rem;
@@ -87,6 +88,7 @@
         -webkit-text-fill-color: transparent;
       }
       
+      /* Status Items */
       .status-item {
         background: rgba(0, 0, 0, 0.3);
         padding: 1rem;
@@ -95,7 +97,6 @@
       }
       
       /* Custom Scrollbar Styling */
-      /* For WebKit browsers */
       .container::-webkit-scrollbar {
         width: 10px;
       }
@@ -107,24 +108,23 @@
         border-radius: 10px;
         border: 2px solid #222;
       }
-      /* For Firefox */
       .container {
         scrollbar-width: thin;
         scrollbar-color: #1a73e8 #222;
       }
       
-      /* Sidebar with Glassmorphism */
+      /* Updated Sidebar to match the container's dark glass effect */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(15px);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        /* Removed border for a cleaner look */
         padding: 20px;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -216,7 +216,8 @@
         <li><a href="adminStatus.html">📊 Parking Status</a></li>
         <li>
           <a href="adminRate.html">
-            <span style="font-weight: bold; text-transform: uppercase; color: #00A86B;">RS</span> Set Parking Rates
+            <span style="font-weight: bold; text-transform: uppercase; color: #00A86B;">RS</span>
+            Set Parking Rates
           </a>
         </li>
         <li><a href="/logout">🚪 Logout</a></li>
@@ -247,7 +248,7 @@
     
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Load parking status data
+      // Fetch parking status data
       async function loadStatus() {
         try {
           const res = await fetch("/admin/status-data");
@@ -281,8 +282,7 @@
       const closeBtn = document.getElementById("closeBtn");
       
       document.addEventListener("DOMContentLoaded", () => {
-        const isSidebarOpen = localStorage.getItem("sidebarOpen");
-        if (isSidebarOpen === "true") {
+        if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });

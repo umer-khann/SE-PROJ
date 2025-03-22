@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Admin Dashboard</title>
+    <title>Owner Dashboard</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,21 +12,19 @@
       rel="stylesheet"
     />
     <style>
-      /* Base Styles */
+      /* Global Styles */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
         background: linear-gradient(180deg, #111 0%, #222 100%);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
         color: #fff;
+        min-height: 100vh;
+        overflow: hidden;
+        padding: 20px;
+        position: relative;
       }
       
-      /* Waves */
+      /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
         position: absolute;
@@ -43,18 +41,17 @@
         transform: rotate(180deg);
       }
       
-      /* Sidebar with Glassmorphism */
+      /* Updated Sidebar matching the container style with neon effect */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(15px);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
         padding: 20px;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
+        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -62,11 +59,15 @@
         left: 0;
       }
       .sidebar h2 {
-        font-weight: 600;
+        margin: 0 0 1.5rem 0;
         font-size: 1.5rem;
-        margin-bottom: 1rem;
-        letter-spacing: 3px;
+        font-weight: 600;
         text-transform: uppercase;
+        letter-spacing: 1px;
+        /* Neon gradient effect for heading */
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
       .sidebar ul {
         list-style: none;
@@ -96,73 +97,6 @@
         margin-bottom: 1rem;
       }
       
-      /* Main Content Container */
-      .hero-container {
-        position: relative;
-        z-index: 2;
-        width: 100%;
-        max-width: 900px;
-        padding: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      /* Hero Card / Glassmorphism Card */
-      .hero-card {
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(15px);
-        border-radius: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-        padding: 3.5rem;
-        text-align: center;
-        width: 100%;
-        max-width: 700px;
-        animation: fadeIn 1.5s ease forwards;
-        position: relative;
-        overflow: hidden;
-      }
-      .hero-card::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(26, 115, 232, 0.2) 0%, transparent 70%);
-        animation: glowPulse 6s infinite alternate;
-        z-index: -1;
-      }
-      @keyframes glowPulse {
-        0% { transform: scale(1); opacity: 0.5; }
-        100% { transform: scale(1.2); opacity: 0.8; }
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .hero-card h1 {
-        font-weight: 600;
-        font-size: 2.8rem;
-        margin-bottom: 2rem;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-      }
-      .dashboard-content {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-        text-align: left;
-      }
-      .dashboard-content p {
-        font-weight: 300;
-        color: #ddd;
-        font-size: 1.1rem;
-        line-height: 1.6;
-        text-align: center;
-      }
-
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -187,19 +121,73 @@
         transform: scale(1.05);
         box-shadow: 0 0 25px rgba(26, 115, 232, 0.8);
       }
-
+      
+      /* Main Content Container */
+      .hero-container {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 900px;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      /* Updated Dashboard Card (Dark Glass Effect) */
+      .dashboard-card {
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        border-radius: 10px;
+        padding: 3rem 4rem;
+        margin: 0 auto;
+        max-width: 700px;
+        text-align: center;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        animation: fadeIn 1.2s ease forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .dashboard-card h1 {
+        margin-bottom: 1rem;
+        font-size: 2.2rem;
+        text-transform: uppercase;
+        color: #f5f5f5;
+        font-weight: 700;
+      }
+      .dashboard-content {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .dashboard-content p {
+        font-weight: 300;
+        color: #ddd;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        text-align: center;
+      }
+      
+      /* Responsive Tweaks */
       @media (max-width: 768px) {
-        .hero-card {
-          padding: 2.5rem;
+        .dashboard-card {
+          padding: 2rem;
+          max-width: 90%;
         }
-        .hero-card h1 {
-          font-size: 2.2rem;
+        .dashboard-card h1 {
+          font-size: 1.8rem;
+        }
+        .dashboard-content p {
+          font-size: 0.9rem;
         }
       }
     </style>
   </head>
   <body>
-    <!-- Top Wave -->
+    <!-- Top Wave Background -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -212,16 +200,13 @@
     
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-      <div class="close-btn" id="closeBtn">×</div>
-      <h2>Admin Menu</h2>
+      <div class="close-btn" id="closeBtn">&times;</div>
+      <h2>Owner Menu</h2>
       <ul>
-        <li><a href="adminParking.html">🚧 Parking Setup</a></li>
-        <li><a href="adminStatus.html">📊 Parking Status</a></li>
-        <li>
-          <a href="adminRate.html">
-            <span style="font-weight: bold; text-transform: uppercase; color: #00A86B;">RS</span> Set Parking Rates
-          </a>
-        </li>
+        <li><a href="registerVehicle.html">🚗 Register Vehicle</a></li>
+        <li><a href="bookParking.html">🅿️ Book Parking</a></li>
+        <li><a href="myReservations.html">📅 My Reservations</a></li>
+        <li><a href="ownerprofile.html">👤 My Profile</a></li>
         <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
@@ -229,20 +214,19 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
     
-    <!-- Main Content -->
+    <!-- Main Content - Centered Dashboard Card -->
     <div class="hero-container">
-      <div class="hero-card">
-        <h1>Welcome, Admin!</h1>
+      <div class="dashboard-card">
+        <h1>Welcome, Vehicle Owner!</h1>
         <div class="dashboard-content">
           <p>
-            Use the navigation menu on the left to manage everything.<br />
-            Keep track of parking spaces, reservations, and more—right at your fingertips!
+            Manage your vehicles and parking reservations using the menu on the left.
           </p>
         </div>
       </div>
     </div>
     
-    <!-- Bottom Wave -->
+    <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
