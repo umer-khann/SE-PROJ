@@ -55,12 +55,12 @@
         box-sizing: border-box;
       }
 
-      /* Updated Booking Card (replacing glassmorphism with dark glass effect) */
+      /* Glassmorphism Card */
       .hero-card {
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(8px);
-        border-radius: 10px;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
         width: 100%;
         max-width: 700px;
         padding: 2rem 3rem;
@@ -111,6 +111,7 @@
         outline: none;
         border-bottom-color: #1a73e8;
       }
+
       .btn-custom {
         width: 100%;
         height: 45px;
@@ -126,18 +127,18 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
 
-      /* Sidebar with updated style (matching the container's dark glass effect) */
+      /* Sidebar with Glassmorphism */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(0, 0, 0, 0.85); /* Updated color */
-        backdrop-filter: blur(8px);       /* Updated blur */
-        /* Removed border for consistency */
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
-        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37); /* Updated drop shadow */
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -183,7 +184,7 @@
         position: fixed;
         top: 20px;
         left: 20px;
-        background: rgba(255, 255, 255, 0.07);
+        background: none;
         border: none;
         font-size: 1.5rem;
         color: #fff;
@@ -292,10 +293,12 @@
         <path
           fill="#111"
           fill-opacity="1"
-          d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,250Z"
+          d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
         ></path>
       </svg>
     </div>
+
+    <!-- PARKING_SPACES_DATA -->
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -318,6 +321,58 @@
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");
+      });
+
+      // Populate Parking Spaces Dropdown
+      function populateParkingSpaces() {
+        const select = document.getElementById("parkingSpaceId");
+        select.innerHTML = "";
+        if (!parkingSpaces || parkingSpaces.length === 0) {
+          const option = document.createElement("option");
+          option.textContent = "No parking spaces available";
+          option.value = "";
+          select.appendChild(option);
+        } else {
+          const defaultOption = document.createElement("option");
+          defaultOption.textContent = "Select a parking space";
+          defaultOption.value = "";
+          select.appendChild(defaultOption);
+          parkingSpaces.forEach((space) => {
+            const option = document.createElement("option");
+            option.textContent = `${space.type} - ${space.rules}`;
+            option.value = space._id;
+            select.appendChild(option);
+          });
+        }
+      }
+
+      // Populate User Vehicles Dropdown
+      function populateUserVehicles() {
+        const carSelect = document.getElementById("carSelect");
+        carSelect.innerHTML = "";
+        if (!userVehicles || userVehicles.length === 0) {
+          const option = document.createElement("option");
+          option.textContent = "No registered vehicles found";
+          option.value = "";
+          carSelect.appendChild(option);
+        } else {
+          const defaultOption = document.createElement("option");
+          defaultOption.textContent = "Select your car";
+          defaultOption.value = "";
+          carSelect.appendChild(defaultOption);
+          userVehicles.forEach((vehicle) => {
+            const option = document.createElement("option");
+            option.textContent = `${vehicle.licensePlate} - ${vehicle.model}`;
+            option.value = vehicle._id;
+            carSelect.appendChild(option);
+          });
+        }
+      }
+
+      // Initialize dropdowns on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        populateParkingSpaces();
+        populateUserVehicles();
       });
     </script>
   </body>
