@@ -23,7 +23,7 @@
         overflow: hidden;
         padding: 20px;
       }
-      
+
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -40,7 +40,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      
+
       /* Main Content - Centered Form Container */
       .main-content {
         position: relative;
@@ -50,7 +50,7 @@
         justify-content: center;
         min-height: calc(100vh - 40px);
       }
-      
+
       /* Updated Glassmorphism Container */
       .container {
         max-width: 600px;
@@ -72,7 +72,7 @@
           transform: translateY(0);
         }
       }
-      
+
       /* Heading with Neon Accent */
       h1 {
         text-align: center;
@@ -84,7 +84,7 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
-      
+
       /* Form Group & Inputs */
       .form-group {
         margin-bottom: 1.5rem;
@@ -106,7 +106,7 @@
       .form-control::placeholder {
         color: #ccc;
       }
-      
+
       /* Remove number input spinners */
       input[type="number"]::-webkit-inner-spin-button,
       input[type="number"]::-webkit-outer-spin-button {
@@ -116,7 +116,7 @@
       input[type="number"] {
         -moz-appearance: textfield;
       }
-      
+
       /* Custom Button */
       .btn-custom {
         width: 100%;
@@ -132,7 +132,7 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
-      
+
       /* Sidebar Styles Matching the Container */
       .sidebar {
         position: fixed;
@@ -185,7 +185,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-      
+
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -210,7 +210,7 @@
         transform: scale(1.05);
         box-shadow: 0 0 25px rgba(26, 115, 232, 0.8);
       }
-      
+
       @media (max-width: 768px) {
         .container {
           padding: 1.5rem;
@@ -239,7 +239,7 @@
         ></path>
       </svg>
     </div>
-    
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">×</div>
@@ -247,19 +247,13 @@
       <ul>
         <li><a href="adminParking.html">🚧 Parking Setup</a></li>
         <li><a href="adminStatus.html">📊 Parking Status</a></li>
-        <li>
-          <a href="adminRate.html">
-            <span style="font-weight: bold; text-transform: uppercase; color: #00A86B;">RS</span>
-            Set Parking Rates
-          </a>
-        </li>
         <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
-    
+
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-    
+
     <!-- Main Content - Centered Form Container -->
     <div class="main-content">
       <div class="container">
@@ -319,7 +313,7 @@
         </form>
       </div>
     </div>
-    
+
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -330,7 +324,7 @@
         ></path>
       </svg>
     </div>
-    
+
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Prevent negative values as the user types by resetting them automatically.
@@ -338,45 +332,47 @@
       const rateInput = document.querySelector('input[name="rate"]');
       const discountInput = document.querySelector('input[name="discount"]');
 
-      numberInput.addEventListener("input", function() {
+      numberInput.addEventListener("input", function () {
         if (this.value < 1) {
           this.value = 1;
         }
       });
 
-      rateInput.addEventListener("input", function() {
+      rateInput.addEventListener("input", function () {
         if (this.value < 0) {
           this.value = 0;
         }
       });
 
-      discountInput.addEventListener("input", function() {
+      discountInput.addEventListener("input", function () {
         if (this.value < 0) {
           this.value = 0;
         }
       });
 
       // JavaScript validation on form submission for extra safety
-      document.getElementById("parkingForm").addEventListener("submit", function (e) {
-        if (Number(numberInput.value) < 1) {
-          e.preventDefault();
-          alert("Number of spaces must be at least 1.");
-          numberInput.focus();
-          return;
-        }
-        if (Number(rateInput.value) < 0) {
-          e.preventDefault();
-          alert("Parking rate cannot be negative.");
-          rateInput.focus();
-          return;
-        }
-        if (Number(discountInput.value) < 0) {
-          e.preventDefault();
-          alert("Discount cannot be negative.");
-          discountInput.focus();
-          return;
-        }
-      });
+      document
+        .getElementById("parkingForm")
+        .addEventListener("submit", function (e) {
+          if (Number(numberInput.value) < 1) {
+            e.preventDefault();
+            alert("Number of spaces must be at least 1.");
+            numberInput.focus();
+            return;
+          }
+          if (Number(rateInput.value) < 0) {
+            e.preventDefault();
+            alert("Parking rate cannot be negative.");
+            rateInput.focus();
+            return;
+          }
+          if (Number(discountInput.value) < 0) {
+            e.preventDefault();
+            alert("Discount cannot be negative.");
+            discountInput.focus();
+            return;
+          }
+        });
 
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");

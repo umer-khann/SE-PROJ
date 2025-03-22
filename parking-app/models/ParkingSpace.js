@@ -4,6 +4,7 @@ const parkingSpaceSchema = new mongoose.Schema({
   number: Number,
   type: String,
   rules: String,
+  rate: Number,
   createdAt: { type: Date, default: Date.now },
 });
 

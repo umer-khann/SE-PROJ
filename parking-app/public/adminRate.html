@@ -23,7 +23,7 @@
         overflow: hidden;
         padding: 20px;
       }
-      
+
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -40,7 +40,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      
+
       /* Main Content - Centered Container */
       .main-content {
         position: relative;
@@ -50,7 +50,7 @@
         justify-content: center;
         min-height: calc(100vh - 40px);
       }
-      
+
       /* Updated Glassmorphism Container for Content */
       .container {
         max-width: 800px;
@@ -75,7 +75,7 @@
           transform: translateY(0);
         }
       }
-      
+
       /* Heading with Neon Accent */
       h1 {
         text-align: center;
@@ -87,7 +87,7 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
-      
+
       /* Status Items */
       .status-item {
         background: rgba(0, 0, 0, 0.3);
@@ -95,7 +95,7 @@
         margin-bottom: 1rem;
         border-radius: 8px;
       }
-      
+
       /* Custom Scrollbar Styling */
       .container::-webkit-scrollbar {
         width: 10px;
@@ -112,7 +112,7 @@
         scrollbar-width: thin;
         scrollbar-color: #1a73e8 #222;
       }
-      
+
       /* Updated Sidebar to Match the Container's Style */
       .sidebar {
         position: fixed;
@@ -165,7 +165,7 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-      
+
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -190,7 +190,7 @@
         transform: scale(1.05);
         box-shadow: 0 0 25px rgba(26, 115, 232, 0.8);
       }
-      
+
       @media (max-width: 768px) {
         .container {
           padding: 1.5rem;
@@ -213,7 +213,7 @@
         ></path>
       </svg>
     </div>
-    
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -221,19 +221,13 @@
       <ul>
         <li><a href="adminParking.html">🚧 Parking Setup</a></li>
         <li><a href="adminStatus.html">📊 Parking Status</a></li>
-        <li>
-          <a href="adminRate.html">
-            <span style="font-weight: bold; text-transform: uppercase; color: #00A86B;">RS</span>
-            Set Parking Rates
-          </a>
-        </li>
         <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
-    
+
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-    
+
     <!-- Main Content - Centered Container -->
     <div class="main-content">
       <div class="container">
@@ -241,7 +235,7 @@
         <div id="statusList"></div>
       </div>
     </div>
-    
+
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -252,7 +246,7 @@
         ></path>
       </svg>
     </div>
-    
+
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Fetch parking status data
@@ -282,23 +276,23 @@
         }
       }
       window.onload = loadStatus;
-      
+
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-      
+
       document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
-      
+
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-      
+
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");

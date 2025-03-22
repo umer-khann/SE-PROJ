@@ -244,7 +244,7 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
     const durationHours = (new Date(endTime) - new Date(startTime)) / 3600000;
 
     // For simplicity, we assume a fixed rate (e.g., $100 per hour).
-    const rateData = 100;
+    const rateData = parkingSpace.rate;
     const totalCost = durationHours * rateData;
 
     // Create a new reservation linking the parking space and the user's selected vehicle
@@ -303,8 +303,8 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
           <h2>Booking Confirmed</h2>
           <p>Reservation ID: ${newReservation._id}</p>
           <p>Duration: ${durationHours.toFixed(2)} hours</p>
-          <p>Rate: $${rateData.toFixed(2)} per hour</p>
-          <p>Total Cost: $${totalCost.toFixed(2)}</p>
+          <p>Rate: RS: ${rateData.toFixed(2)} per hour</p>
+          <p>Total Cost: RS: ${totalCost.toFixed(2)}</p>
         </div>
         <script>
           // After 3 seconds, fade out the overlay and redirect to the dashboard
@@ -403,11 +403,12 @@ app.post(
   isAdmin,
   async (req, res) => {
     try {
-      const { number, type, rules } = req.body;
+      const { number, type, rules, rate } = req.body;
       const newParkingSpace = new ParkingSpace({
         number: parseInt(number, 10),
         type,
         rules,
+        rate,
       });
       await newParkingSpace.save();
       res.send(
