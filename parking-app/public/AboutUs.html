@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About Us</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Base Styles */
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(180deg, #111 0%, #222 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+      }
+      h1 {
+        font-weight: 600;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: 2px;
+      }
+      /* Waves */
+      .top-wave,
+      .bottom-wave {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
+      }
+      .top-wave {
+        top: 0;
+      }
+      .bottom-wave {
+        bottom: 0;
+        transform: rotate(180deg);
+      }
+      /* Content Card */
+      .about-card {
+        position: relative;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        padding: 2rem;
+        max-width: 900px;
+        width: 90%;
+        margin: 2rem auto;
+      }
+      .team {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+      }
+      .member {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 1.5rem;
+        width: 250px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .member:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      }
+      /* All images will have the same size */
+      .member img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+      }
+      .member h3 {
+        margin: 0.5rem 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      .member p {
+        font-size: 0.95rem;
+        color: #ccc;
+        margin: 0.5rem 0;
+      }
+      /* Email Link Style (shortened font) */
+      .member a {
+        color: #1a73e8;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.7rem;
+        transition: color 0.3s ease;
+      }
+      .member a:hover {
+        color: #9ce3f0;
+      }
+      /* Back Button */
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.07);
+        border: none;
+        font-size: 1rem;
+        color: #fff;
+        cursor: pointer;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background 0.3s ease;
+        z-index: 3;
+      }
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      @media (max-width: 768px) {
+        .team {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Back Button -->
+    <a href="index.html" class="back-btn">← Back</a>
+
+    <!-- Top Wave -->
+    <div class="top-wave">
+      <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill="#0d1b2a"
+          fill-opacity="1"
+          d="M0,96L80,85.3C160,75,320,64,480,74.7C640,85,800,107,960,117.3C1120,128,1280,128,1360,117.3L1440,107L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+        ></path>
+      </svg>
+    </div>
+
+    <!-- About Us Card -->
+    <div class="about-card">
+      <h1>About Us</h1>
+      <div class="team">
+        <div class="member">
+          <img src="munhim.jpg" alt="Abdul Munhim Hussain" />
+          <h3>Abdul Munhim Hussain</h3>
+          <p>Project Manager</p>
+          <p>
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=munhim2002@gmail.com"
+              target="_blank"
+              >munhim2002@gmail.com</a>
+          </p>
+        </div>
+        <div class="member">
+          <img src="umer.jpg" alt="Muhammad Umer Khan" />
+          <h3>Muhammad Umer Khan</h3>
+          <p>Team Lead</p>
+          <p>
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=khanmu2003@gmail.com"
+              target="_blank"
+              >khanmu2003@gmail.com</a>
+          </p>
+        </div>
+        <div class="member">
+          <img src="hamza.jpg" alt="Mohammad Hamza Imran" />
+          <h3>Mohammad Hamza Imran</h3>
+          <p>Scrum Master</p>
+          <p>
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=hamzaimran66628@gmail.com"
+              target="_blank"
+              >hamzaimran66628@gmail.com</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Wave -->
+    <div class="bottom-wave">
+      <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill="#0d1b2a"
+          fill-opacity="1"
+          d="M0,96L80,85.3C160,75,320,64,480,74.7C640,85,800,107,960,117.3C1120,128,1280,128,1360,117.3L1440,107L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+        ></path>
+      </svg>
+    </div>
+  </body>
+</html>

@@ -17,7 +17,6 @@
       body {
         margin: 0;
         font-family: "Roboto", sans-serif;
-        /* Full background image */
         background: url("background.jpeg") center center / cover no-repeat;
         min-height: 100vh;
         display: flex;
@@ -27,7 +26,6 @@
         overflow: hidden;
         color: #fff;
       }
-      /* Optional dark overlay to improve contrast */
       body::before {
         content: "";
         position: absolute;
@@ -38,7 +36,28 @@
         background: rgba(0, 0, 0, 0.4);
         z-index: 0;
       }
-      /* Enhanced Glass Box */
+      .about-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 30px;
+        padding: 12px 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+      }
+      .about-button:hover {
+        background: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 6px 15px rgba(255, 255, 255, 0.3);
+        transform: translateY(-3px);
+      }
       .glass-box {
         position: relative;
         z-index: 1;
@@ -63,7 +82,6 @@
       .glass-box h1 {
         margin-bottom: 1.5rem;
         font-size: 1.5rem;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-weight: 700;
         letter-spacing: 1px;
         text-transform: uppercase;
@@ -74,7 +92,6 @@
         flex-direction: column;
         gap: 1rem;
         align-items: center;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
       }
       .btn-custom {
         width: 100%;
@@ -105,6 +122,7 @@
     </style>
   </head>
   <body>
+    <a href="AboutUs.html" class="about-button">About Us</a>
     <div class="glass-box">
       <h1>Vehicle Parking Management System</h1>
       <div class="button-group">
