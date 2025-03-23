@@ -71,8 +71,14 @@
         overflow: hidden;
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       /* Heading */
@@ -117,22 +123,6 @@
       .login-form input:focus::placeholder {
         opacity: 0;
       }
-      /* Animated underline on focus */
-      .login-form .form-group::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: #1a73e8;
-        transition: width 0.4s ease;
-      }
-      .login-form input:focus + .form-group::after,
-      .login-form input:focus ~ .form-group::after {
-        width: 100%;
-      }
-
       /* Login Button */
       .login-btn {
         width: 100%;
@@ -152,6 +142,15 @@
         box-shadow: 0 0 25px rgba(26, 115, 232, 0.8);
       }
 
+      /* Error Message Container */
+      #errorMessage {
+        display: none;
+        color: #ff4444;
+        margin-top: 1rem;
+        font-weight: 600;
+        text-align: center;
+      }
+
       /* Responsive Adjustments */
       @media (max-width: 768px) {
         .hero-card {
@@ -161,30 +160,9 @@
           font-size: 2.2rem;
         }
       }
-
-      /* Confirmation Overlay */
-      #confirmationOverlay {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(26, 115, 232, 0.95);
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        font-size: 1rem;
-        z-index: 9999;
-        opacity: 1;
-        transition: opacity 1s ease;
-        display: none;
-      }
     </style>
   </head>
   <body>
-    <!-- Confirmation Overlay -->
-    <div id="confirmationOverlay"></div>
-
     <!-- Top Wave -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -200,7 +178,10 @@
     <div class="hero-container">
       <div class="hero-card">
         <h1>Admin Login</h1>
-        <form class="login-form" method="POST" action="/admin/login">
+        <!-- Error message container -->
+        <div id="errorMessage"></div>
+
+        <form id="loginForm" class="login-form" method="POST" action="/admin/login">
           <div class="form-group">
             <input type="text" name="username" placeholder="👤 Username" required />
           </div>
@@ -211,7 +192,9 @@
         </form>
         <p style="margin-top: 1rem">
           Don't have an account?
-          <a href="adminRegister.html" style="color: #1a73e8; text-decoration: none;">Register here</a>
+          <a href="adminRegister.html" style="color: #1a73e8; text-decoration: none;"
+            >Register here</a
+          >
         </p>
       </div>
     </div>
@@ -228,20 +211,40 @@
     </div>
 
     <script>
-      // Check for "registered" query parameter to show a confirmation overlay
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("registered") === "true") {
-        const overlay = document.getElementById("confirmationOverlay");
-        overlay.textContent = "Admin registered successfully!";
-        overlay.style.display = "block";
-        setTimeout(() => {
-          overlay.style.opacity = "0";
-          setTimeout(() => {
-            overlay.style.display = "none";
-            window.history.replaceState({}, document.title, window.location.pathname);
-          }, 1000);
-        }, 2000);
-      }
+      // Intercept the form submission
+      document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Collect form data
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          const res = await fetch("/admin/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+          });
+
+          if (res.ok) {
+            const result = await res.json();
+            // If login successful, redirect to the admin dashboard
+            window.location.href = result.redirect;
+          } else {
+            // Show an inline error message on the same page
+            document.getElementById("errorMessage").textContent =
+              "Invalid credentials. Please try again.";
+            document.getElementById("errorMessage").style.display = "block";
+          }
+        } catch (error) {
+          console.error("Error during login:", error);
+          document.getElementById("errorMessage").textContent =
+            "An error occurred. Please try again.";
+          document.getElementById("errorMessage").style.display = "block";
+        }
+      });
     </script>
   </body>
 </html>

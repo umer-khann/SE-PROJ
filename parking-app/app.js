@@ -47,23 +47,24 @@ app.get("/index.html", (req, res) => {
 // Authentication Routes
 
 // Admin Login
-app.post("/admin/login", async (req, res) => {
+app.post("/owner/login", async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username, password, role: "admin" });
+    const user = await User.findOne({ username, password, role: "owner" });
     if (user) {
       req.session.userId = user._id;
       req.session.userRole = user.role;
-      res.redirect("/adminDashboard.html");
+      // Instead of redirecting, send a JSON response:
+      res.json({ success: true, redirect: "/ownerDashboard.html" });
     } else {
-      res.send(
-        'Invalid admin credentials. <a href="/adminLogin.html">Try again</a>'
-      );
+      res.status(401).json({ success: false, error: "Invalid owner credentials." });
     }
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
+
+
 
 // Owner Login
 app.post("/owner/login", async (req, res) => {

@@ -25,6 +25,7 @@
         overflow: hidden;
         color: #fff;
       }
+
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -41,6 +42,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
+
       /* Hero Container */
       .hero-container {
         position: relative;
@@ -52,6 +54,7 @@
         align-items: center;
         justify-content: center;
       }
+
       /* Updated Registration Box (Hero Card) */
       .hero-card {
         background: rgba(0, 0, 0, 0.85);
@@ -76,6 +79,7 @@
           transform: translateY(0);
         }
       }
+
       /* Heading */
       .hero-card h1 {
         font-weight: 600;
@@ -85,6 +89,7 @@
         text-transform: uppercase;
         color: #f5f5f5;
       }
+
       /* Registration Form */
       .register-form {
         width: 100%;
@@ -94,7 +99,9 @@
       }
       .register-form .form-group {
         margin-bottom: 1.5rem;
+        position: relative;
       }
+
       .register-form input {
         background: transparent;
         border: none;
@@ -112,6 +119,26 @@
       .register-form ::placeholder {
         color: #aaa;
       }
+      
+      /* When input is valid, show green check icon and green border */
+      .register-form input:valid {
+        border-bottom-color: #28a745;
+        background-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22%2328a745%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M13.854%203.146a.5.5%200%200%201%200%20.708l-7.5%207.5a.5.5%200%200%201-.708%200l-3-3a.5.5%200%200%201%20.708-.708l2.646%202.647%207.146-7.147a.5.5%200%200%201%20.708%200z%22/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: 16px;
+        background-position: right 8px center;
+      }
+
+      /* When input is not empty and invalid, keep border red */
+      .register-form input:not(:placeholder-shown):invalid {
+        border-bottom-color: red;
+      }
+
+      /* Hide default "required" messages while still enforcing them */
+      .register-form input:invalid {
+        /* oninvalid and oninput inline events (see below) clear default messages */
+      }
+
       /* Register Button */
       .register-btn {
         width: 100%;
@@ -128,6 +155,21 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
+
+      /* Success & Error Messages */
+      #messageContainer {
+        margin-top: 1rem;
+        text-align: center;
+        display: none; /* hidden by default */
+        font-weight: 600;
+      }
+      .success {
+        color: #28a745;
+      }
+      .error {
+        color: #ff4444;
+      }
+
       @media (max-width: 768px) {
         .hero-card {
           padding: 2rem;
@@ -149,33 +191,80 @@
         ></path>
       </svg>
     </div>
+
     <!-- Hero Container -->
     <div class="hero-container">
       <div class="hero-card">
         <h1>Admin Register</h1>
-        <form class="register-form" method="POST" action="/admin/register">
+
+        <!-- Success/Error Message Container -->
+        <div id="messageContainer"></div>
+
+        <!-- Registration Form -->
+        <form id="registerForm" class="register-form">
+          <!-- Name: alphabets + spaces only -->
           <div class="form-group">
-            <input type="text" name="name" placeholder="👤 Name" required />
+            <input
+              type="text"
+              name="name"
+              placeholder="👤 Name"
+              pattern="^[A-Za-z ]+$"
+              required
+              oninvalid="this.setCustomValidity('')"
+              oninput="this.setCustomValidity('')"
+            />
           </div>
+
+          <!-- Contact: exactly 11 digits -->
           <div class="form-group">
-            <input type="text" name="contact" placeholder="📞 Contact" required />
+            <input
+              type="text"
+              name="contact"
+              placeholder="📞 Contact"
+              pattern="^[0-9]{11}$"
+              required
+              oninvalid="this.setCustomValidity('')"
+              oninput="this.setCustomValidity('')"
+            />
           </div>
+
+          <!-- Username: can be anything, just required -->
           <div class="form-group">
-            <input type="text" name="username" placeholder="👤 Username" required />
+            <input
+              type="text"
+              name="username"
+              placeholder="👤 Username"
+              required
+              oninvalid="this.setCustomValidity('')"
+              oninput="this.setCustomValidity('')"
+            />
           </div>
+
+          <!-- Password: at least 5 characters -->
           <div class="form-group">
-            <input type="password" name="password" placeholder="🔒 Password" required />
+            <input
+              type="password"
+              name="password"
+              placeholder="🔒 Password"
+              pattern=".{5,}"
+              required
+              oninvalid="this.setCustomValidity('')"
+              oninput="this.setCustomValidity('')"
+            />
           </div>
+
           <button type="submit" class="btn btn-primary register-btn">
             Register
           </button>
         </form>
+
         <p style="margin-top: 1rem">
           Already have an account?
           <a href="adminLogin.html" style="color: #1a73e8">Login here</a>
         </p>
       </div>
     </div>
+
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -186,5 +275,49 @@
         ></path>
       </svg>
     </div>
+
+    <script>
+      // Intercept the form submission to handle registration via fetch
+      document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Prevent normal form submission
+
+        // Collect form data
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          const res = await fetch('/admin/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+
+          const messageContainer = document.getElementById('messageContainer');
+
+          if (res.ok) {
+            // If registration succeeded, show success message
+            messageContainer.textContent = 'Registered successfully!';
+            messageContainer.className = 'success'; // apply green color
+            messageContainer.style.display = 'block';
+            // Optionally clear the form
+            this.reset();
+          } else {
+            // If registration failed, show error
+            const errorData = await res.json();
+            messageContainer.textContent = errorData.error || 'Registration failed.';
+            messageContainer.className = 'error'; // apply red color
+            messageContainer.style.display = 'block';
+          }
+        } catch (err) {
+          console.error(err);
+          const messageContainer = document.getElementById('messageContainer');
+          messageContainer.textContent = 'An error occurred. Please try again.';
+          messageContainer.className = 'error';
+          messageContainer.style.display = 'block';
+        }
+      });
+    </script>
   </body>
 </html>
