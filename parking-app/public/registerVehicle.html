@@ -25,7 +25,6 @@
         overflow: hidden;
         color: #fff;
       }
-      
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -42,7 +41,6 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      
       /* Hero Container */
       .hero-container {
         position: relative;
@@ -54,7 +52,6 @@
         align-items: center;
         justify-content: center;
       }
-      
       /* Updated Vehicle Registration Card */
       .hero-card {
         background: rgba(0, 0, 0, 0.85);
@@ -77,7 +74,6 @@
           transform: translateY(0);
         }
       }
-      
       /* Heading */
       .hero-card h1 {
         font-weight: 600;
@@ -85,9 +81,8 @@
         margin-bottom: 1.5rem;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color:cadetblue;
+        color: cadetblue;
       }
-      
       /* Vehicle Form Styling */
       .vehicle-form {
         width: 100%;
@@ -129,19 +124,17 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
-      
-      /* Sidebar with updated style (matching the container's dark glass effect) */
+      /* Sidebar with updated style */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(0, 0, 0, 0.85); /* Updated background color */
-        backdrop-filter: blur(8px);       /* Matching blur */
-        /* Removed border for a cleaner look */
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
         padding: 20px;
-        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37); /* Updated box-shadow */
+        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -181,7 +174,6 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-      
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -211,7 +203,7 @@
         ></path>
       </svg>
     </div>
-    
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -224,22 +216,19 @@
         <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
-    
+
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-    
+
     <!-- Hero Container & Card -->
     <div class="hero-container">
       <div class="hero-card">
         <h1>Register Vehicle</h1>
-        <form class="vehicle-form" method="POST" action="/register-vehicle">
+        <!-- Inline message container -->
+        <div id="successMsg" style="margin-bottom: 1rem; font-weight:600;"></div>
+        <form class="vehicle-form" id="vehicleForm" method="POST" action="/register-vehicle">
           <div class="form-group">
-            <input
-              type="text"
-              name="licensePlate"
-              placeholder="License Plate"
-              required
-            />
+            <input type="text" name="licensePlate" placeholder="License Plate" required />
           </div>
           <div class="form-group">
             <input type="text" name="model" placeholder="Model" required />
@@ -253,7 +242,7 @@
         </form>
       </div>
     </div>
-    
+
     <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
@@ -264,7 +253,7 @@
         ></path>
       </svg>
     </div>
-    
+
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Sidebar functionality
@@ -288,18 +277,42 @@
         localStorage.setItem("sidebarOpen", "false");
       });
 
-      // Vehicle type validation (alphabet only)
+      // Vehicle type validation (alphabet only) and inline message handling with Fetch API
       document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector(".vehicle-form");
+        const form = document.getElementById("vehicleForm");
         const typeInput = document.querySelector('input[name="type"]');
+        const successMsg = document.getElementById("successMsg");
 
-        form.addEventListener("submit", function (event) {
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          // Validate vehicle type (alphabet only)
           const typeValue = typeInput.value.trim();
           const alphabetRegex = /^[A-Za-z]+$/;
-
           if (!alphabetRegex.test(typeValue)) {
-            event.preventDefault();
             alert("Type should only contain alphabets.");
+            return;
+          }
+
+          // Collect form data
+          const formData = new FormData(form);
+          try {
+            const response = await fetch(form.action, {
+              method: "POST",
+              body: formData,
+            });
+            const result = await response.json();
+            if (result.success) {
+              successMsg.textContent = result.message;
+              successMsg.style.color = "lime";
+              form.reset(); // Optionally reset the form
+            } else {
+              successMsg.textContent = result.message;
+              successMsg.style.color = "red";
+            }
+          } catch (error) {
+            successMsg.textContent = "An error occurred while registering the vehicle.";
+            successMsg.style.color = "red";
           }
         });
       });

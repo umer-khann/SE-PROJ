@@ -74,16 +74,18 @@ app.post("/owner/login", async (req, res) => {
     if (user) {
       req.session.userId = user._id;
       req.session.userRole = user.role;
-      res.redirect("/ownerDashboard.html");
+      // Instead of res.redirect(...), send JSON:
+      res.json({ success: true, redirect: "/ownerDashboard.html" });
     } else {
-      res.send(
-        'Invalid owner credentials. <a href="/ownerLogin.html">Try again</a>'
-      );
+      // 401 = Unauthorized
+      res.status(401).json({ success: false, error: "Invalid owner credentials." });
     }
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
+
+
 
 // General Registration Route (if needed)
 app.post("/register", async (req, res) => {
@@ -178,13 +180,13 @@ app.post("/register-vehicle", isAuthenticated, isOwner, async (req, res) => {
       owner: req.session.userId,
     });
     await newVehicle.save();
-    res.send(
-      'Vehicle registered successfully! <a href="/ownerDashboard.html">Back to Dashboard</a>'
-    );
+    res.json({ success: true, message: "Vehicle registered successfully!" });
   } catch (error) {
-    res.status(500).send("Error registering vehicle: " + error.message);
+    res.status(500).json({ success: false, message: "Error registering vehicle: " + error.message });
   }
 });
+
+
 // GET route to serve bookParking.html with parking spaces and user cars injected
 app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
   try {

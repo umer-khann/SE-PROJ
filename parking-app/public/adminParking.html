@@ -77,10 +77,9 @@
       h1 {
         text-align: center;
         margin-bottom: 1.5rem;
-        color: #9ce3f0;
         font-weight: 700;
         text-transform: uppercase;
-        color:cadetblue;
+        color: cadetblue;
       }
 
       /* Form Group & Inputs */
@@ -115,6 +114,29 @@
         -moz-appearance: textfield;
       }
 
+      /* Autofill override: keep background dark and text white */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,0.85) inset !important;
+        -webkit-text-fill-color: #fff !important;
+      }
+
+      /* Valid input styling: green border and check icon */
+      .form-control:valid {
+        border-bottom-color: #28a745;
+        background-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22%2328a745%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M13.854%203.146a.5.5%200%200%201%200%20.708l-7.5%207.5a.5.5%200%200%201-.708%200l-3-3a.5.5%200%200%201%20.708-.708l2.646%202.647%207.146-7.147a.5.5%200%200%201%20.708%200z%22/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: 16px;
+        background-position: right 8px center;
+      }
+
+      /* Invalid input styling: if input is not empty and invalid, border remains red */
+      .form-control:not(:placeholder-shown):invalid {
+        border-bottom-color: red;
+      }
+
       /* Custom Button */
       .btn-custom {
         width: 100%;
@@ -140,7 +162,6 @@
         height: 100%;
         background: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(8px);
-        /* Removed border to match container */
         padding: 20px;
         box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37);
         transition: left 0.3s ease;
@@ -220,20 +241,31 @@
         .hero-card {
           padding: 2.5rem;
         }
-        .hero-card h1 {
-          font-size: 2.2rem;
-        }
+      }
+
+      /* Message Container for inline success/error messages */
+      #messageContainer {
+        margin-top: 1rem;
+        text-align: center;
+        display: none;
+        font-weight: 600;
+      }
+      .success {
+        color: #28a745;
+      }
+      .error {
+        color: #ff4444;
       }
     </style>
   </head>
   <body>
-    <!-- Top Wave -->
+    <!-- Top Wave Background -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
-          fill="#0d1b2a"
+          fill="#111"
           fill-opacity="1"
-          d="M0,96L80,85.3C160,75,320,64,480,74.7C640,85,800,107,960,117.3C1120,128,1280,128,1360,117.3L1440,107L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+          d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
         ></path>
       </svg>
     </div>
@@ -256,6 +288,8 @@
     <div class="main-content">
       <div class="container">
         <h1>Create Parking Space</h1>
+        <!-- Inline Message Container -->
+        <div id="messageContainer"></div>
         <form id="parkingForm" method="POST" action="/create-parking-space">
           <div class="form-group">
             <input
@@ -267,12 +301,14 @@
               min="1"
             />
           </div>
+          <!-- Updated Type Field: Only alphabets and spaces allowed -->
           <div class="form-group">
             <input
               type="text"
               name="type"
               class="form-control"
               placeholder="Type (e.g., compact, large)"
+              pattern="^[A-Za-z ]+$"
               required
             />
           </div>
@@ -325,52 +361,62 @@
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Prevent negative values as the user types by resetting them automatically.
+      // Prevent negative values in number inputs as user types.
       const numberInput = document.querySelector('input[name="number"]');
       const rateInput = document.querySelector('input[name="rate"]');
       const discountInput = document.querySelector('input[name="discount"]');
 
       numberInput.addEventListener("input", function () {
-        if (this.value < 1) {
-          this.value = 1;
-        }
+        if (this.value < 1) this.value = 1;
       });
-
       rateInput.addEventListener("input", function () {
-        if (this.value < 0) {
-          this.value = 0;
-        }
+        if (this.value < 0) this.value = 0;
       });
-
       discountInput.addEventListener("input", function () {
-        if (this.value < 0) {
-          this.value = 0;
-        }
+        if (this.value < 0) this.value = 0;
       });
 
-      // JavaScript validation on form submission for extra safety
-      document
-        .getElementById("parkingForm")
-        .addEventListener("submit", function (e) {
-          if (Number(numberInput.value) < 1) {
-            e.preventDefault();
-            alert("Number of spaces must be at least 1.");
-            numberInput.focus();
-            return;
+      // Handle form submission via AJAX to display inline message.
+      document.getElementById("parkingForm").addEventListener("submit", async function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Collect form data
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          const res = await fetch("/create-parking-space", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+          });
+
+          const messageContainer = document.getElementById("messageContainer");
+
+          if (res.ok) {
+            // Get response as text since our API returns HTML text
+            const responseText = await res.text();
+            // Display success message inline
+            messageContainer.innerHTML = responseText;
+            messageContainer.className = "success";
+            messageContainer.style.display = "block";
+            // Optionally clear the form
+            this.reset();
+          } else {
+            messageContainer.textContent = "Error creating parking space.";
+            messageContainer.className = "error";
+            messageContainer.style.display = "block";
           }
-          if (Number(rateInput.value) < 0) {
-            e.preventDefault();
-            alert("Parking rate cannot be negative.");
-            rateInput.focus();
-            return;
-          }
-          if (Number(discountInput.value) < 0) {
-            e.preventDefault();
-            alert("Discount cannot be negative.");
-            discountInput.focus();
-            return;
-          }
-        });
+        } catch (error) {
+          console.error("Error:", error);
+          const messageContainer = document.getElementById("messageContainer");
+          messageContainer.textContent = "An error occurred. Please try again.";
+          messageContainer.className = "error";
+          messageContainer.style.display = "block";
+        }
+      });
 
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");

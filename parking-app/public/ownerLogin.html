@@ -25,6 +25,7 @@
         overflow: hidden;
         color: #fff;
       }
+
       /* Waves styling */
       .top-wave,
       .bottom-wave {
@@ -41,6 +42,7 @@
         bottom: 0;
         transform: rotate(180deg);
       }
+
       /* Container */
       .hero-container {
         position: relative;
@@ -52,6 +54,7 @@
         align-items: center;
         justify-content: center;
       }
+
       /* Updated Login Box Design */
       .hero-card {
         background: rgba(0, 0, 0, 0.85);
@@ -67,9 +70,16 @@
         overflow: hidden;
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
+
       /* Heading */
       .hero-card h1 {
         font-weight: 700;
@@ -79,6 +89,7 @@
         text-transform: uppercase;
         color: cadetblue;
       }
+
       /* Login Form */
       .login-form {
         width: 100%;
@@ -126,6 +137,7 @@
       .login-form input:focus ~ .form-group::after {
         width: 100%;
       }
+
       /* Login Button */
       .login-btn {
         width: 100%;
@@ -144,6 +156,7 @@
         transform: scale(1.05);
         box-shadow: 0 0 25px rgba(26, 115, 232, 0.8);
       }
+
       /* Inline error message container */
       #errorMessage {
         margin-top: 1rem;
@@ -153,6 +166,16 @@
         font-weight: 600;
         color: #ff4444;
       }
+
+      /* Autofill fix: keep background dark and text white */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,0.85) inset !important;
+        -webkit-text-fill-color: #fff !important;
+      }
+
       @media (max-width: 768px) {
         .hero-card {
           padding: 2.5rem;
@@ -167,7 +190,11 @@
     <!-- Top Wave -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#0d1b2a" fill-opacity="1" d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+        <path
+          fill="#0d1b2a"
+          fill-opacity="1"
+          d="M0,96L80,101.3C160,107,320,117,480,117.3C640,117,800,107,960,85.3C1120,64,1280,32,1360,16L1440,0L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+        ></path>
       </svg>
     </div>
 
@@ -196,7 +223,11 @@
     <!-- Bottom Wave -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#0d1b2a" fill-opacity="1" d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+        <path
+          fill="#0d1b2a"
+          fill-opacity="1"
+          d="M0,250L80,250C160,250,320,250,480,250C640,250,800,250,960,250C1120,250,1280,250,1360,250L1440,250L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+        ></path>
       </svg>
     </div>
 
@@ -210,6 +241,8 @@
         const data = Object.fromEntries(formData.entries());
 
         try {
+          // This endpoint should return JSON with { success: true, redirect: "/ownerDashboard.html" }
+          // if credentials are valid, or { success: false, error: "..."} if not.
           const res = await fetch("/owner/login", {
             method: "POST",
             headers: {
@@ -220,18 +253,26 @@
 
           if (res.ok) {
             const result = await res.json();
-            // Redirect to the owner dashboard on success
-            window.location.href = result.redirect;
+            // If the server responded with success and a redirect path:
+            if (result.success) {
+              // Navigate to the specified dashboard
+              window.location.href = result.redirect;
+            } else {
+              // If success is false, show the server's error message
+              document.getElementById("errorMessage").textContent = result.error || "Invalid owner credentials. Please try again.";
+              document.getElementById("errorMessage").style.display = "block";
+            }
           } else {
-            // Show inline error message on the same page
+            // Non-200 status (like 401 or 500) - show inline error
+            const errorData = await res.json();
             document.getElementById("errorMessage").textContent =
-              "Invalid owner credentials. Please try again.";
+              errorData.error || "Invalid owner credentials. Please try again.";
             document.getElementById("errorMessage").style.display = "block";
           }
         } catch (error) {
           console.error("Error during login:", error);
           document.getElementById("errorMessage").textContent =
-            "Invalid Credentials. Please try again.";
+            "An error occurred. Please try again.";
           document.getElementById("errorMessage").style.display = "block";
         }
       });
