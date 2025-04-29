@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Notifications</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(180deg, #111, #222);
+        color: #fff;
+        min-height: 100vh;
+        padding: 20px;
+        overflow-x: hidden;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        transition: left 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .sidebar h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        margin-bottom: 1rem;
+      }
+
+      .sidebar ul li a {
+        color: #fff;
+        text-decoration: none;
+        padding: 0.5rem 0.8rem;
+        display: block;
+        border-radius: 5px;
+        transition: background 0.2s ease;
+      }
+
+      .sidebar ul li a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .close-btn {
+        font-size: 1.5rem;
+        cursor: pointer;
+        text-align: right;
+        margin-bottom: 1rem;
+      }
+
+      .hamburger-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        font-size: 1.5rem;
+        color: #fff;
+        cursor: pointer;
+        z-index: 1100;
+      }
+
+      .container {
+        margin-left: 0;
+        padding-top: 80px;
+        max-width: 800px;
+        margin: auto;
+      }
+
+      .notification-card {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #1a73e8;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .notification-card h5 {
+        margin: 0 0 0.5rem 0;
+        color: #1a73e8;
+        font-size: 1.1rem;
+      }
+
+      .notification-card p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #ddd;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding-top: 100px;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="close-btn" id="closeBtn">&times;</div>
+      <h2>Owner Menu</h2>
+      <ul>
+        <li><a href="ownerDashboard.html">🏠 Dashboard</a></li>
+        <li><a href="registerVehicle.html">🚗 Register Vehicle</a></li>
+        <li><a href="bookParking.html">🅿️ Book Parking</a></li>
+        <li><a href="myReservations.html">📅 My Reservations</a></li>
+        <li><a href="ownerprofile.html">👤 My Profile</a></li>
+        <li><a href="notifications.html">🔔 Notifications</a></li>
+        <li><a href="/logout">🚪 Logout</a></li>
+      </ul>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger-btn" id="hamburgerBtn">☰</button>
+
+    <!-- Notifications Content -->
+    <div class="container">
+      <h2 class="text-center mb-4">Notifications</h2>
+      <div id="notificationsContainer">
+        <p>Loading notifications...</p>
+      </div>
+    </div>
+
+    <script>
+      const sidebar = document.getElementById("sidebar");
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const closeBtn = document.getElementById("closeBtn");
+
+      document.addEventListener("DOMContentLoaded", () => {
+        if (localStorage.getItem("sidebarOpen") === "true") {
+          sidebar.classList.add("active");
+        }
+        loadNotifications(); // Load notifications when DOM is ready
+      });
+
+      hamburgerBtn.addEventListener("click", () => {
+        sidebar.classList.add("active");
+        localStorage.setItem("sidebarOpen", "true");
+      });
+
+      closeBtn.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        localStorage.setItem("sidebarOpen", "false");
+      });
+
+      async function loadNotifications() {
+        const container = document.getElementById("notificationsContainer");
+        try {
+          const res = await fetch("/owner/notifications-data");
+          const data = await res.json();
+      
+          if (!Array.isArray(data) || data.length === 0) {
+            container.innerHTML = "<p>No notifications to show.</p>";
+            return;
+          }
+      
+          container.innerHTML = "";
+          data.forEach((notification) => {
+            // Check if notification.parkingSpace is valid
+            if (notification.parkingSpace) {
+              const endTime = new Date(notification.endTime);
+              const now = new Date();
+      
+              let timeLeftMs = endTime - now;
+              let timeLeftStr = "Expired";
+      
+              if (timeLeftMs > 0) {
+                // Live countdown using setInterval
+                const card = document.createElement("div");
+                card.className = "notification-card";
+                card.innerHTML = `
+                  <h5>Reservation Confirmed</h5>
+                  <p>Space #${notification.parkingSpace.number} (${notification.parkingSpace.type}) reserved.</p>
+                  <p><small>Expires at: ${new Date(notification.endTime).toLocaleString()}</small></p>
+                  <p><small><strong>Status:</strong> <span class="countdown" id="countdown-${notification._id}"></span></small></p>
+                `;
+                container.appendChild(card);
+      
+                const countdownElement = document.getElementById(`countdown-${notification._id}`);
+      
+                const timer = setInterval(() => {
+                  const now = new Date();
+                  timeLeftMs = endTime - now;
+      
+                  if (timeLeftMs <= 0) {
+                    clearInterval(timer);
+                    countdownElement.textContent = "Expired";
+                  } else {
+                    const hours = Math.floor(timeLeftMs / 3600000);
+                    const minutes = Math.floor((timeLeftMs % 3600000) / 60000);
+                    const seconds = Math.floor((timeLeftMs % 60000) / 1000);
+                    countdownElement.textContent = `${hours}h ${minutes}m ${seconds}s remaining`;
+                  }
+                }, 1000); // Update the timer every second
+              } else {
+                const card = document.createElement("div");
+                card.className = "notification-card";
+                card.innerHTML = `
+                  <h5>Reservation Confirmed</h5>
+                  <p>Space #${notification.parkingSpace.number} (${notification.parkingSpace.type}) reserved.</p>
+                  <p><small>Expires at: ${new Date(notification.endTime).toLocaleString()}</small></p>
+                  <p><small><strong>Status:</strong> Expired</small></p>
+                `;
+                container.appendChild(card);
+              }
+            } else {
+              console.warn("Missing parking space data for notification:", notification);
+            }
+          });
+        } catch (err) {
+          console.error("Failed to fetch notifications:", err);
+          container.innerHTML = "<p>Error loading notifications. Please try again later.</p>";
+        }
+      }
+      
+    </script>
+  </body>
+</html>

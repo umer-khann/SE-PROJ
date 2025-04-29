@@ -124,72 +124,6 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
-      /* Sidebar with updated style */
-      .sidebar {
-        position: fixed;
-        top: 0;
-        left: -250px;
-        width: 250px;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(8px);
-        padding: 20px;
-        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37);
-        transition: left 0.3s ease;
-        z-index: 1200;
-      }
-      .sidebar.active {
-        left: 0;
-      }
-      .sidebar h2 {
-        margin: 0 0 1rem 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-      .sidebar ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      .sidebar ul li {
-        margin-bottom: 1rem;
-      }
-      .sidebar ul li a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: 500;
-        display: block;
-        padding: 0.5rem 0.8rem;
-        border-radius: 5px;
-        transition: background 0.2s;
-      }
-      .sidebar ul li a:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-      .close-btn {
-        font-size: 1.5rem;
-        text-align: right;
-        cursor: pointer;
-        margin-bottom: 1rem;
-      }
-      /* Hamburger Button */
-      .hamburger-btn {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        background: rgba(255, 255, 255, 0.07);
-        border: none;
-        font-size: 1.5rem;
-        color: #fff;
-        cursor: pointer;
-        z-index: 1100;
-        transition: transform 0.2s;
-      }
-      .hamburger-btn:hover {
-        transform: scale(1.1);
-      }
     </style>
   </head>
   <body>
@@ -203,23 +137,6 @@
         ></path>
       </svg>
     </div>
-
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-      <div class="close-btn" id="closeBtn">&times;</div>
-      <h2>Owner Menu</h2>
-      <ul>
-        <li><a href="registerVehicle.html">🚗 Register Vehicle</a></li>
-        <li><a href="bookParking.html">🅿️ Book Parking</a></li>
-        <li><a href="myReservations.html">📅 My Reservations</a></li>
-        <li><a href="ownerprofile.html">👤 My Profile</a></li>
-        <li><a href="#" id="showNotifications">🔔 Notifications</a></li>
-        <li><a href="/logout">🚪 Logout</a></li>
-      </ul>
-    </div>
-
-    <!-- Hamburger Button -->
-    <button class="hamburger-btn" id="hamburgerBtn">☰</button>
 
     <!-- Hero Container & Card -->
     <div class="hero-container">
@@ -237,9 +154,7 @@
           <div class="form-group">
             <input type="text" name="type" placeholder="Type" required />
           </div>
-          <button type="submit" class="btn btn-primary vehicle-btn">
-            Register Vehicle
-          </button>
+          <button type="submit" class="vehicle-btn">Register Vehicle</button>
         </form>
       </div>
     </div>
@@ -257,27 +172,6 @@
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Sidebar functionality
-      const sidebar = document.getElementById("sidebar");
-      const hamburgerBtn = document.getElementById("hamburgerBtn");
-      const closeBtn = document.getElementById("closeBtn");
-
-      document.addEventListener("DOMContentLoaded", () => {
-        if (localStorage.getItem("sidebarOpen") === "true") {
-          sidebar.classList.add("active");
-        }
-      });
-
-      hamburgerBtn.addEventListener("click", () => {
-        sidebar.classList.add("active");
-        localStorage.setItem("sidebarOpen", "true");
-      });
-
-      closeBtn.addEventListener("click", () => {
-        sidebar.classList.remove("active");
-        localStorage.setItem("sidebarOpen", "false");
-      });
-
       // Vehicle type validation (alphabet only) and inline message handling with Fetch API
       document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("vehicleForm");
@@ -295,12 +189,20 @@
             return;
           }
 
-          // Collect form data
+          // Collect form data and convert it to JSON
           const formData = new FormData(form);
+          const formObj = {};
+          formData.forEach((value, key) => {
+            formObj[key] = value;
+          });
+
           try {
             const response = await fetch(form.action, {
               method: "POST",
-              body: formData,
+              headers: {
+                "Content-Type": "application/json", // Ensure Content-Type is JSON
+              },
+              body: JSON.stringify(formObj), // Send data as JSON
             });
             const result = await response.json();
             if (result.success) {

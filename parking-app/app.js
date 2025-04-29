@@ -172,6 +172,24 @@ app.get("/registerVehicle.html", isAuthenticated, isOwner, (req, res) => {
 app.post("/register-vehicle", isAuthenticated, isOwner, async (req, res) => {
   try {
     const { licensePlate, model, type } = req.body;
+
+    // Validate that the license plate is provided
+    if (!licensePlate || licensePlate.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "License Plate is required.",
+      });
+    }
+
+    // Check for existing vehicle with the same license plate
+    const existingVehicle = await Vehicle.findOne({ licensePlate });
+    if (existingVehicle) {
+      return res.status(400).json({
+        success: false,
+        message: "A vehicle with this license plate already exists.",
+      });
+    }
+
     const newVehicle = new Vehicle({
       licensePlate,
       model,
@@ -187,6 +205,7 @@ app.post("/register-vehicle", isAuthenticated, isOwner, async (req, res) => {
     });
   }
 });
+
 
 // GET route to serve bookParking.html with parking spaces and user cars injected
 app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
@@ -335,50 +354,45 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
   }
 });
 
-<<<<<<< Updated upstream
 // GET owner notifications data
-=======
 
 // GET owner notifications data
-app.get(
-  "/owner/notifications-data",
-  isAuthenticated,
-  isOwner,
-  async (req, res) => {
-    try {
-      // Fetch all reservations for this owner, newest first
-      const notifications = await Reservation.find({ user: req.session.userId })
-        .populate("parkingSpace", "number type")  // bring in space # & type
-        .sort({ createdAt: -1 });
+app.get("/owner/notifications-data", isAuthenticated, isOwner, async (req, res) => {
+  try {
+    const notifications = await Reservation.find({ user: req.session.userId })
+      .populate("parkingSpace", "number type") // Ensure parking space data is populated
+      .sort({ createdAt: -1 });
 
-      res.json(notifications);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-      res.status(500).json({ error: error.message });
-    }
+    res.json(notifications); // Send populated notifications data as JSON
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "Failed to fetch notifications" });
   }
-);
+});
 
+// Admin Route to get all users
+// Assuming that you have a User model already defined with necessary fields
 
->>>>>>> Stashed changes
-app.get(
-  "/owner/notifications-data",
-  isAuthenticated,
-  isOwner,
-  async (req, res) => {
-    try {
-      // Fetch all reservations for this owner, newest first
-      const notifications = await Reservation.find({ user: req.session.userId })
-        .populate("parkingSpace", "number type") // bring in space # & type
-        .sort({ createdAt: -1 });
+app.get("/admin/users", isAuthenticated, isAdmin, async (req, res) => {
+  try {
+    // Fetch only name and role fields, excluding password
+    const users = await User.find({}, "name role");  // Only fetch name and role fields
 
-      res.json(notifications);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-      res.status(500).json({ error: error.message });
+    // If no users found, send a message
+    if (users.length === 0) {
+      return res.status(404).json({ error: "No users found." });
     }
+
+    // Send the list of users as a JSON response
+    res.json(users);
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error("Error fetching users:", error);
+
+    // Send error response with the error message
+    res.status(500).json({ error: "Error fetching users: " + error.message });
   }
-);
+});
 
 app.get("/admin/Reports.html", isAuthenticated, isAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "Reports.html"));

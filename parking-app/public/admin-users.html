@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>My Reservations</title>
+    <title>Admin - User List</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,16 +12,19 @@
       rel="stylesheet"
     />
     <style>
-      /* Global Body & Font */
+      /* Global Styles */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
         background: linear-gradient(180deg, #111 0%, #222 100%);
         color: #fff;
+        min-height: 100vh;
         position: relative;
         overflow: hidden;
+        padding: 20px;
       }
-      /* Waves */
+
+      /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
         position: absolute;
@@ -37,29 +40,30 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      /* Hero Container to center everything vertically */
-      .hero-container {
+
+      /* Main Content - Centered Container */
+      .main-content {
         position: relative;
         z-index: 2;
-        width: 100%;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 2rem;
-        min-height: 100vh; /* Full vertical space */
-        box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: center;
+        min-height: calc(100vh - 40px);
       }
-      /* Updated Dashboard Card */
-      .hero-card {
+
+      /* Updated Glassmorphism Container for Content */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
         background: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(8px);
         border-radius: 10px;
+        padding: 2rem 3rem;
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        padding: 2rem;
-        width: 100%;
         animation: fadeIn 1.2s ease forwards;
+        /* Enable vertical scrolling if needed */
+        max-height: 70vh;
+        overflow-y: auto;
       }
       @keyframes fadeIn {
         from {
@@ -71,56 +75,55 @@
           transform: translateY(0);
         }
       }
-      .hero-card h1 {
+
+      /* Heading with Neon Accent */
+      h1 {
         text-align: center;
         margin-bottom: 1.5rem;
-        font-size: 2.2rem;
-        letter-spacing: 2px;
-        text-transform: uppercase;
+        color: #9ce3f0;
         font-weight: 700;
-        color: cadetblue;
-        
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #9ce3f0 0%, #1a73e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
-      /* Reservations List */
-      .reservation-list {
-        margin-top: 1.5rem;
-        max-height: 500px; /* scrollable area if many reservations */
-        overflow-y: auto;
-      }
-      .reservation-item {
+
+      /* Status Items */
+      .status-item {
         background: rgba(0, 0, 0, 0.3);
         padding: 1rem;
         margin-bottom: 1rem;
         border-radius: 8px;
       }
+
       /* Custom Scrollbar Styling */
-      .reservation-list::-webkit-scrollbar {
+      .container::-webkit-scrollbar {
         width: 10px;
       }
-      .reservation-list::-webkit-scrollbar-track {
+      .container::-webkit-scrollbar-track {
         background: #222;
       }
-      .reservation-list::-webkit-scrollbar-thumb {
+      .container::-webkit-scrollbar-thumb {
         background-color: #1a73e8;
         border-radius: 10px;
         border: 2px solid #222;
       }
-      .reservation-list {
+      .container {
         scrollbar-width: thin;
         scrollbar-color: #1a73e8 #222;
       }
-      /* Updated Sidebar to match the dark glass container */
+
+      /* Updated Sidebar to Match the Container's Style */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(0, 0, 0, 0.85); /* Matching container background */
-        backdrop-filter: blur(8px);       /* Matching blur */
-        /* Removed border for a cleaner look */
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
         padding: 20px;
-        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37); /* Matching drop shadow */
+        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -128,7 +131,7 @@
         left: 0;
       }
       .sidebar h2 {
-        margin: 0 0 1rem 0;
+        margin: 0 0 1.5rem 0;
         font-size: 1.5rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -149,10 +152,11 @@
         display: block;
         padding: 0.5rem 0.8rem;
         border-radius: 5px;
-        transition: background 0.2s;
+        transition: background 0.2s, transform 0.2s;
       }
       .sidebar ul li a:hover {
         background-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
       }
       .close-btn {
         font-size: 1.5rem;
@@ -160,21 +164,40 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
+
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
         top: 20px;
         left: 20px;
-        background: none;
+        background: rgba(255, 255, 255, 0.07);
         border: none;
         font-size: 1.5rem;
         color: #fff;
         cursor: pointer;
         z-index: 1100;
-        transition: transform 0.2s;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 0 15px rgba(26, 115, 232, 0.5);
       }
       .hamburger-btn:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(26, 115, 232, 0.8);
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1.5rem;
+          max-width: 90%;
+        }
+        h1 {
+          font-size: 2rem;
+        }
       }
     </style>
   </head>
@@ -193,13 +216,12 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
-      <h2>Owner Menu</h2>
+      <h2>Admin Menu</h2>
       <ul>
-        <li><a href="registerVehicle.html">🚗 Register Vehicle</a></li>
-        <li><a href="bookParking.html">🅿️ Book Parking</a></li>
-        <li><a href="myReservations.html">📅 My Reservations</a></li>
-        <li><a href="ownerprofile.html">👤 My Profile</a></li>
-        <li><a href="notifications.html">🔔 Notifications</a></li>
+        <li><a href="/adminParking.html">🚧 Parking Setup</a></li>
+        <li><a href="/adminStatus.html">📊 Parking Status</a></li>
+        <li><a href="/admin/reports.html">📜 Detailed Report</a></li>
+        <li><a href="/admin-users.html">👥 Registered Users</a></li>
         <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
@@ -207,13 +229,11 @@
     <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
 
-    <!-- Hero Container & Card -->
-    <div class="hero-container">
-      <div class="hero-card">
-        <h1>My Reservations</h1>
-        <div id="reservations" class="reservation-list">
-          <!-- Reservations will be populated here -->
-        </div>
+    <!-- Main Content - Centered Container -->
+    <div class="main-content">
+      <div class="container">
+        <h1>Registered Users</h1>
+        <div id="statusList"></div>
       </div>
     </div>
 
@@ -230,6 +250,32 @@
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
+      // Fetch user data
+      async function loadUsers() {
+        try {
+          const res = await fetch("/admin/users");
+          const users = await res.json();
+          const container = document.getElementById("statusList");
+          if (users.length === 0) {
+            container.innerHTML = "<p>No users found.</p>";
+          } else {
+            container.innerHTML = "";
+            users.forEach((user) => {
+              const div = document.createElement("div");
+              div.className = "status-item";
+              div.innerHTML = `
+                <p><strong>Name:</strong> ${user.name}</p>
+                <p><strong>Role:</strong> ${user.role}</p>
+              `;
+              container.appendChild(div);
+            });
+          }
+        } catch (error) {
+          console.error("Error loading users", error);
+        }
+      }
+      window.onload = loadUsers;
+
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
@@ -250,42 +296,6 @@
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");
       });
-
-      // Fetch reservations functionality
-      async function loadReservations() {
-        try {
-          const response = await fetch("/my-reservations-data");
-          if (!response.ok) throw new Error("Failed to fetch reservations");
-          const reservations = await response.json();
-          const container = document.getElementById("reservations");
-          if (!reservations || reservations.length === 0) {
-            container.innerHTML = "<p>No reservations found.</p>";
-            return;
-          }
-          container.innerHTML = "";
-          reservations.forEach((res) => {
-            const div = document.createElement("div");
-            div.className = "reservation-item";
-            div.innerHTML = `
-              <p><strong>ID:</strong> ${res._id}</p>
-              <p><strong>Parking Space:</strong> ${res.parkingSpace}</p>
-              <p><strong>From:</strong> ${new Date(res.startTime).toLocaleString()}</p>
-              <p><strong>To:</strong> ${new Date(res.endTime).toLocaleString()}</p>
-              <p><strong>Cost (Rs):</strong> ${new Number(res.cost).toLocaleString()}</p>
-              <form method="POST" action="/cancel-reservation">
-                <input type="hidden" name="id" value="${res._id}">
-                <button type="submit" class="btn btn-danger">Cancel Reservation</button>
-              </form>
-            `;
-            container.appendChild(div);
-          });
-        } catch (error) {
-          console.error(error);
-          document.getElementById("reservations").innerHTML =
-            "<p>Error loading reservations.</p>";
-        }
-      }
-      loadReservations();
     </script>
   </body>
 </html>
