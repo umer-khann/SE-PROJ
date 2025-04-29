@@ -85,8 +85,6 @@ app.post("/owner/login", async (req, res) => {
   }
 });
 
-
-
 // General Registration Route (if needed)
 app.post("/register", async (req, res) => {
   try {
@@ -250,6 +248,13 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
     const rateData = parkingSpace.rate;
     const totalCost = durationHours * rateData;
 
+    // **Guard against NaN cost**
+    if (!isFinite(totalCost) || isNaN(totalCost)) {
+      return res
+        .status(400)
+        .send("Invalid start/end time or rate; cannot calculate cost.");
+    }
+
     // Create a new reservation linking the parking space and the user's selected vehicle
     const newReservation = new Reservation({
       user: req.session.userId,
@@ -257,7 +262,7 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
       parkingSpace: parkingSpace._id,
       startTime: new Date(startTime),
       endTime: new Date(endTime),
-      cost: new Number(totalCost),
+      cost: totalCost,          // primitive number, guaranteed valid
     });
     await newReservation.save();
 
@@ -326,6 +331,35 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
     res.status(500).send("Error booking parking space: " + error.message);
   }
 });
+
+app.get(
+  "/admin/Reports.html",
+  isAuthenticated,
+  isAdmin,
+  (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "Reports.html"));
+  }
+);
+
+// 2. JSON API: full occupancy‐history
+app.get(
+  "/admin/occupancy-history-data",
+  isAuthenticated,
+  isAdmin,
+  async (req, res) => {
+    try {
+      const history = await Reservation.find()
+        .populate("parkingSpace", "number type")   // bring in space # & type
+        .populate("vehicle", "licensePlate model") // plate & model
+        .populate("user", "name")                  // only user name
+        .sort({ startTime: -1 });                  // newest first
+
+      res.json(history);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 
 app.post("/owner/change-password", isAuthenticated, async (req, res) => {
   try {
