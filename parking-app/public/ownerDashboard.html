@@ -32,9 +32,7 @@
         z-index: 1;
         filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.3));
       }
-      .top-wave {
-        top: 0;
-      }
+      .top-wave { top: 0; }
       .bottom-wave {
         bottom: 0;
         transform: rotate(180deg);
@@ -54,9 +52,7 @@
         transition: left 0.3s ease;
         z-index: 1200;
       }
-      .sidebar.active {
-        left: 0;
-      }
+      .sidebar.active { left: 0; }
       .sidebar h2 {
         margin: 0 0 1rem 0;
         font-size: 1.5rem;
@@ -64,14 +60,8 @@
         text-transform: uppercase;
         letter-spacing: 1px;
       }
-      .sidebar ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      .sidebar ul li {
-        margin-bottom: 1rem;
-      }
+      .sidebar ul { list-style: none; padding: 0; margin: 0; }
+      .sidebar ul li { margin-bottom: 1rem; }
       .sidebar ul li a {
         color: #fff;
         text-decoration: none;
@@ -104,9 +94,13 @@
         z-index: 1100;
         transition: transform 0.2s;
       }
+<<<<<<< Updated upstream
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
+=======
+      .hamburger-btn:hover { transform: scale(1.1); }
+>>>>>>> Stashed changes
       /* Main Content */
       .main-content {
         position: relative;
@@ -169,6 +163,7 @@
         margin-bottom: 1rem;
         border-radius: 5px;
       }
+<<<<<<< Updated upstream
       .countdown {
         font-weight: bold;
         color: #1a73e8;
@@ -182,6 +177,13 @@
         .dashboard-card h1 {
           font-size: 1.6rem;
         }
+=======
+      .countdown { font-weight: bold; color: #1a73e8; }
+      /* Responsive */
+      @media (max-width: 768px) {
+        .dashboard-card { padding: 1.5rem; max-width: 95%; }
+        .dashboard-card h1 { font-size: 1.6rem; }
+>>>>>>> Stashed changes
       }
     </style>
   </head>
@@ -189,11 +191,7 @@
     <!-- Top Wave -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
-        <path
-          fill="#0d1b2a"
-          fill-opacity="1"
-          d="M0,96L80,85.3C160,75,320,64,480,74.7C640,85,800,107,960,117.3C1120,128,1280,128,1360,117.3L1440,107L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
-        ></path>
+        <path fill="#0d1b2a" fill-opacity="1" d="M0,96L80,85.3C160,75,320,64,480,74.7C640,85,800,107,960,117.3C1120,128,1280,128,1360,117.3L1440,107L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
       </svg>
     </div>
     <!-- Sidebar -->
@@ -218,10 +216,14 @@
         <div id="homeContent">
           <h1>Welcome, Vehicle Owner!</h1>
           <div class="dashboard-content">
+<<<<<<< Updated upstream
             <p>
               Manage your vehicles and parking reservations using the menu on
               the left.
             </p>
+=======
+            <p>Manage your vehicles and parking reservations using the menu on the left.</p>
+>>>>>>> Stashed changes
           </div>
         </div>
         <!-- Notifications Content -->
@@ -234,11 +236,7 @@
     <!-- Bottom Wave -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
-        <path
-          fill="#0d1b2a"
-          fill-opacity="1"
-          d="M0,96L80,85.3C160,75,320,64,480,74.7C640,85,800,107,960,117.3C1120,128,1280,128,1360,117.3L1440,107L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
-        ></path>
+        <path fill="#0d1b2a" fill-opacity="1" d="M0,96L80,85.3C160,75,320,64,480,74.7C640,85,800,107,960,117.3C1120,128,1280,128,1360,117.3L1440,107L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
       </svg>
     </div>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -263,6 +261,7 @@
       // Notifications logic
       async function loadNotifications() {
         try {
+<<<<<<< Updated upstream
           const res = await fetch("/owner/notifications-data");
           const notes = await res.json();
           const list = document.getElementById("notificationsList");
@@ -271,13 +270,29 @@
             const div = document.createElement("div");
             div.className = "notification";
             let rem = "";
+=======
+          const res = await fetch('/owner/notifications-data');
+          const notes = await res.json();
+          const list = document.getElementById('notificationsList');
+          list.innerHTML = '';
+          notes.forEach(n => {
+            const div = document.createElement('div');
+            div.className = 'notification';
+            let rem = '';
+>>>>>>> Stashed changes
             const now = Date.now();
             const end = new Date(n.endTime).getTime();
             if (now < end) {
               const diff = end - now;
+<<<<<<< Updated upstream
               const hrs = Math.floor(diff / 3600000);
               const mins = Math.floor((diff % 3600000) / 60000);
               const secs = Math.floor((diff % 60000) / 1000);
+=======
+              const hrs = Math.floor(diff/3600000);
+              const mins = Math.floor((diff%3600000)/60000);
+              const secs = Math.floor((diff%60000)/1000);
+>>>>>>> Stashed changes
               rem = `<p>Expires in: <span class="countdown">${hrs}h ${mins}m ${secs}s</span></p>`;
             }
             div.innerHTML = `
@@ -288,6 +303,7 @@
             list.appendChild(div);
           });
         } catch (e) {
+<<<<<<< Updated upstream
           console.error("Error loading notifications", e);
         }
       }
@@ -317,6 +333,30 @@
             h = Math.floor(total / 3600);
             m = Math.floor((total % 3600) / 60);
             s = total % 60;
+=======
+          console.error('Error loading notifications', e);
+        }
+      }
+      // Toggle views
+      document.getElementById('showNotifications').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('homeContent').style.display = 'none';
+        document.getElementById('notificationsContent').style.display = 'block';
+        loadNotifications();
+        sidebar.classList.remove('active');
+      });
+      // Poll countdown every second
+      setInterval(() => {
+        document.querySelectorAll('.countdown').forEach(el => {
+          const parts = el.textContent.match(/(\d+)h (\d+)m (\d+)s/);
+          if (parts) {
+            let [h, m, s] = [parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3])];
+            let total = h*3600 + m*60 + s - 1;
+            if (total < 0) return;
+            h = Math.floor(total/3600);
+            m = Math.floor((total%3600)/60);
+            s = total%60;
+>>>>>>> Stashed changes
             el.textContent = `${h}h ${m}m ${s}s`;
           }
         });

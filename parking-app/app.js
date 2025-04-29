@@ -335,7 +335,32 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
   }
 });
 
+<<<<<<< Updated upstream
 // GET owner notifications data
+=======
+
+// GET owner notifications data
+app.get(
+  "/owner/notifications-data",
+  isAuthenticated,
+  isOwner,
+  async (req, res) => {
+    try {
+      // Fetch all reservations for this owner, newest first
+      const notifications = await Reservation.find({ user: req.session.userId })
+        .populate("parkingSpace", "number type")  // bring in space # & type
+        .sort({ createdAt: -1 });
+
+      res.json(notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+
+>>>>>>> Stashed changes
 app.get(
   "/owner/notifications-data",
   isAuthenticated,
@@ -474,6 +499,8 @@ app.post(
     }
   }
 );
+
+
 app.get("/adminStatus.html", isAuthenticated, isAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "adminStatus.html"));
 });
@@ -523,26 +550,44 @@ app.post("/admin/set-rates", isAuthenticated, isAdmin, async (req, res) => {
     res.status(500).send("Error setting parking rate: " + error.message);
   }
 });
-app.get("/admin/reports", isAuthenticated, isAdmin, async (req, res) => {
-  try {
-    const reports = await Reservation.aggregate([
-      {
-        $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-          count: { $sum: 1 },
-        },
-      },
-      { $sort: { _id: 1 } },
-    ]);
-    let reportHTML = "<h1>Reservation Reports</h1>";
-    reports.forEach((report) => {
-      reportHTML += `<p>Date: ${report._id} - Reservations: ${report.count}</p>`;
-    });
-    res.send(reportHTML);
-  } catch (error) {
-    res.status(500).send("Error generating reports: " + error.message);
+
+app.get(
+  "/admin/reports.html",
+  isAuthenticated,
+  isAdmin,
+  (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "reports.html"));
   }
-});
+);
+
+// 2) Expose the aggregated data as JSON
+app.get(
+  "/admin/reports-data",
+  isAuthenticated,
+  isAdmin,
+  async (req, res) => {
+    try {
+      const reports = await Reservation.aggregate([
+        {
+          $group: {
+            _id: {
+              $dateToString: {
+                format: "%Y-%m-%d",
+                date: "$createdAt",
+              },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]);
+      res.json(reports);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
 app.get("/simulate-reminder", (req, res) => {
   res.send(
     "Reminder: Your reservation expires in 10 minutes. An email reminder has been sent."
