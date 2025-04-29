@@ -23,7 +23,6 @@
         padding: 20px;
         position: relative;
       }
-      
       /* Wave Backgrounds */
       .top-wave,
       .bottom-wave {
@@ -40,15 +39,14 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      
-      /* Sidebar (background updated to match container) */
+      /* Sidebar */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(0, 0, 0, 0.85); /* Updated background color */
+        background: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(15px);
         border-right: 1px solid rgba(255, 255, 255, 0.1);
         padding: 20px;
@@ -93,7 +91,6 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-      
       /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
@@ -110,8 +107,7 @@
       .hamburger-btn:hover {
         transform: scale(1.1);
       }
-      
-      /* Main Content: Centered Dashboard Card */
+      /* Main Content */
       .main-content {
         position: relative;
         z-index: 2;
@@ -120,35 +116,35 @@
         justify-content: center;
         min-height: calc(100vh - 40px);
       }
-      
-      /* Updated Dashboard Card */
+      /* Dashboard Card */
       .dashboard-card {
         background: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(8px);
         border-radius: 10px;
-        padding: 3rem 4rem;
+        padding: 2rem;
         margin: 0 auto;
         max-width: 700px;
-        text-align: center;
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         animation: fadeIn 1.2s ease forwards;
+        width: 100%;
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       .dashboard-card h1 {
         margin-bottom: 1rem;
-        font-size: 2.2rem;
+        font-size: 2rem;
         text-transform: uppercase;
-        color:cadetblue;
+        color: cadetblue;
         font-weight: 700;
-      }
-      .dashboard-content {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-        text-align: left;
+        text-align: center;
       }
       .dashboard-content p {
         font-weight: 300;
@@ -157,24 +153,40 @@
         line-height: 1.6;
         text-align: center;
       }
-      
-      /* Responsive Tweaks */
+      /* Notifications */
+      #notificationsContent {
+        display: none;
+      }
+      #notificationsList {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 1rem;
+        padding-right: 10px;
+      }
+      #notificationsList .notification {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+      }
+      .countdown {
+        font-weight: bold;
+        color: #1a73e8;
+      }
+      /* Responsive */
       @media (max-width: 768px) {
         .dashboard-card {
-          padding: 2rem;
-          max-width: 90%;
+          padding: 1.5rem;
+          max-width: 95%;
         }
         .dashboard-card h1 {
-          font-size: 1.8rem;
-        }
-        .dashboard-content p {
-          font-size: 0.9rem;
+          font-size: 1.6rem;
         }
       }
     </style>
   </head>
   <body>
-    <!-- Top Wave Background -->
+    <!-- Top Wave -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -184,7 +196,6 @@
         ></path>
       </svg>
     </div>
-    
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
@@ -194,26 +205,33 @@
         <li><a href="bookParking.html">🅿️ Book Parking</a></li>
         <li><a href="myReservations.html">📅 My Reservations</a></li>
         <li><a href="ownerprofile.html">👤 My Profile</a></li>
+        <li><a href="#" id="showNotifications">🔔 Notifications</a></li>
         <li><a href="/logout">🚪 Logout</a></li>
       </ul>
     </div>
-    
-    <!-- Hamburger Button -->
+    <!-- Hamburger -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
-    
-    <!-- Main Content - Centered Dashboard Card -->
+    <!-- Main Content -->
     <div class="main-content">
       <div class="dashboard-card">
-        <h1>Welcome, Vehicle Owner!</h1>
-        <div class="dashboard-content">
-          <p>
-            Manage your vehicles and parking reservations using the menu on the left.
-          </p>
+        <!-- Home Content -->
+        <div id="homeContent">
+          <h1>Welcome, Vehicle Owner!</h1>
+          <div class="dashboard-content">
+            <p>
+              Manage your vehicles and parking reservations using the menu on
+              the left.
+            </p>
+          </div>
+        </div>
+        <!-- Notifications Content -->
+        <div id="notificationsContent">
+          <h1>Notifications</h1>
+          <div id="notificationsList"></div>
         </div>
       </div>
     </div>
-    
-    <!-- Bottom Wave Background -->
+    <!-- Bottom Wave -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -223,29 +241,86 @@
         ></path>
       </svg>
     </div>
-    
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
       // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
-      
       document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("sidebarOpen") === "true") {
           sidebar.classList.add("active");
         }
       });
-      
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
         localStorage.setItem("sidebarOpen", "true");
       });
-      
       closeBtn.addEventListener("click", () => {
         sidebar.classList.remove("active");
         localStorage.setItem("sidebarOpen", "false");
       });
+      // Notifications logic
+      async function loadNotifications() {
+        try {
+          const res = await fetch("/owner/notifications-data");
+          const notes = await res.json();
+          const list = document.getElementById("notificationsList");
+          list.innerHTML = "";
+          notes.forEach((n) => {
+            const div = document.createElement("div");
+            div.className = "notification";
+            let rem = "";
+            const now = Date.now();
+            const end = new Date(n.endTime).getTime();
+            if (now < end) {
+              const diff = end - now;
+              const hrs = Math.floor(diff / 3600000);
+              const mins = Math.floor((diff % 3600000) / 60000);
+              const secs = Math.floor((diff % 60000) / 1000);
+              rem = `<p>Expires in: <span class="countdown">${hrs}h ${mins}m ${secs}s</span></p>`;
+            }
+            div.innerHTML = `
+              <p><strong>Reservation ID:</strong> ${n._id}</p>
+              <p><strong>Space #:</strong> ${n.parkingSpace.number} (${n.parkingSpace.type})</p>
+              ${rem}
+            `;
+            list.appendChild(div);
+          });
+        } catch (e) {
+          console.error("Error loading notifications", e);
+        }
+      }
+      // Toggle views
+      document
+        .getElementById("showNotifications")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+          document.getElementById("homeContent").style.display = "none";
+          document.getElementById("notificationsContent").style.display =
+            "block";
+          loadNotifications();
+          sidebar.classList.remove("active");
+        });
+      // Poll countdown every second
+      setInterval(() => {
+        document.querySelectorAll(".countdown").forEach((el) => {
+          const parts = el.textContent.match(/(\d+)h (\d+)m (\d+)s/);
+          if (parts) {
+            let [h, m, s] = [
+              parseInt(parts[1]),
+              parseInt(parts[2]),
+              parseInt(parts[3]),
+            ];
+            let total = h * 3600 + m * 60 + s - 1;
+            if (total < 0) return;
+            h = Math.floor(total / 3600);
+            m = Math.floor((total % 3600) / 60);
+            s = total % 60;
+            el.textContent = `${h}h ${m}m ${s}s`;
+          }
+        });
+      }, 1000);
     </script>
   </body>
 </html>

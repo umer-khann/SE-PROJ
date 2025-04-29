@@ -56,15 +56,14 @@ app.post("/admin/login", async (req, res) => {
       req.session.userRole = user.role;
       return res.json({ success: true, redirect: "/adminDashboard.html" });
     } else {
-      return res.status(401).json({ success: false, error: "Invalid admin credentials." });
+      return res
+        .status(401)
+        .json({ success: false, error: "Invalid admin credentials." });
     }
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 });
-
-
-
 
 // Owner Login
 app.post("/owner/login", async (req, res) => {
@@ -78,7 +77,9 @@ app.post("/owner/login", async (req, res) => {
       res.json({ success: true, redirect: "/ownerDashboard.html" });
     } else {
       // 401 = Unauthorized
-      res.status(401).json({ success: false, error: "Invalid owner credentials." });
+      res
+        .status(401)
+        .json({ success: false, error: "Invalid owner credentials." });
     }
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -180,10 +181,12 @@ app.post("/register-vehicle", isAuthenticated, isOwner, async (req, res) => {
     await newVehicle.save();
     res.json({ success: true, message: "Vehicle registered successfully!" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Error registering vehicle: " + error.message });
+    res.status(500).json({
+      success: false,
+      message: "Error registering vehicle: " + error.message,
+    });
   }
 });
-
 
 // GET route to serve bookParking.html with parking spaces and user cars injected
 app.get("/bookParking.html", isAuthenticated, isOwner, async (req, res) => {
@@ -262,7 +265,7 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
       parkingSpace: parkingSpace._id,
       startTime: new Date(startTime),
       endTime: new Date(endTime),
-      cost: totalCost,          // primitive number, guaranteed valid
+      cost: totalCost, // primitive number, guaranteed valid
     });
     await newReservation.save();
 
@@ -332,14 +335,29 @@ app.post("/book-parking", isAuthenticated, isOwner, async (req, res) => {
   }
 });
 
+// GET owner notifications data
 app.get(
-  "/admin/Reports.html",
+  "/owner/notifications-data",
   isAuthenticated,
-  isAdmin,
-  (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "Reports.html"));
+  isOwner,
+  async (req, res) => {
+    try {
+      // Fetch all reservations for this owner, newest first
+      const notifications = await Reservation.find({ user: req.session.userId })
+        .populate("parkingSpace", "number type") // bring in space # & type
+        .sort({ createdAt: -1 });
+
+      res.json(notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      res.status(500).json({ error: error.message });
+    }
   }
 );
+
+app.get("/admin/Reports.html", isAuthenticated, isAdmin, (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "Reports.html"));
+});
 
 // 2. JSON API: full occupancy‐history
 app.get(
@@ -349,10 +367,10 @@ app.get(
   async (req, res) => {
     try {
       const history = await Reservation.find()
-        .populate("parkingSpace", "number type")   // bring in space # & type
+        .populate("parkingSpace", "number type") // bring in space # & type
         .populate("vehicle", "licensePlate model") // plate & model
-        .populate("user", "name")                  // only user name
-        .sort({ startTime: -1 });                  // newest first
+        .populate("user", "name") // only user name
+        .sort({ startTime: -1 }); // newest first
 
       res.json(history);
     } catch (error) {
