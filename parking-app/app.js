@@ -601,6 +601,34 @@ app.get(
   }
 );
 
+app.post("/reset-password", async (req, res) => {
+  const { username, contact, newPassword } = req.body;
+
+  if (!username || !contact || !newPassword) {
+    return res.status(400).send("Username, contact number, and new password are required.");
+  }
+
+  try {
+    // Find the user by username and contact number
+    const user = await User.findOne({ username, contact });
+
+    if (!user) {
+      return res.status(404).send("User not found with the provided username and contact number.");
+    }
+
+    // Reset password
+    user.password = newPassword; // Update user's password
+    await user.save(); // Save the new password in the database
+
+    res.status(200).send("Password reset successfully!"); // Return success message
+
+  } catch (error) {
+    console.error("Error during password reset:", error);
+    res.status(500).send("Server error. Please try again later.");
+  }
+});
+
+
 app.get("/simulate-reminder", (req, res) => {
   res.send(
     "Reminder: Your reservation expires in 10 minutes. An email reminder has been sent."
