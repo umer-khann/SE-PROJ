@@ -12,7 +12,6 @@
       rel="stylesheet"
     />
     <style>
-      /* Global Body & Font */
       body {
         margin: 0;
         font-family: "Poppins", sans-serif;
@@ -21,7 +20,6 @@
         position: relative;
         overflow: hidden;
       }
-      /* Waves */
       .top-wave,
       .bottom-wave {
         position: absolute;
@@ -37,7 +35,6 @@
         bottom: 0;
         transform: rotate(180deg);
       }
-      /* Hero Container to center everything vertically */
       .hero-container {
         position: relative;
         z-index: 2;
@@ -45,13 +42,12 @@
         max-width: 900px;
         margin: 0 auto;
         padding: 2rem;
-        min-height: 100vh; /* Full vertical space */
+        min-height: 100vh;
         box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: center;
       }
-      /* Updated Dashboard Card */
       .hero-card {
         background: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(8px);
@@ -79,12 +75,10 @@
         text-transform: uppercase;
         font-weight: 700;
         color: cadetblue;
-        
       }
-      /* Reservations List */
       .reservation-list {
         margin-top: 1.5rem;
-        max-height: 500px; /* scrollable area if many reservations */
+        max-height: 500px;
         overflow-y: auto;
       }
       .reservation-item {
@@ -93,7 +87,6 @@
         margin-bottom: 1rem;
         border-radius: 8px;
       }
-      /* Custom Scrollbar Styling */
       .reservation-list::-webkit-scrollbar {
         width: 10px;
       }
@@ -109,18 +102,16 @@
         scrollbar-width: thin;
         scrollbar-color: #1a73e8 #222;
       }
-      /* Updated Sidebar to match the dark glass container */
       .sidebar {
         position: fixed;
         top: 0;
         left: -250px;
         width: 250px;
         height: 100%;
-        background: rgba(0, 0, 0, 0.85); /* Matching container background */
-        backdrop-filter: blur(8px);       /* Matching blur */
-        /* Removed border for a cleaner look */
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
         padding: 20px;
-        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37); /* Matching drop shadow */
+        box-shadow: 2px 0 32px rgba(31, 38, 135, 0.37);
         transition: left 0.3s ease;
         z-index: 1200;
       }
@@ -160,7 +151,6 @@
         cursor: pointer;
         margin-bottom: 1rem;
       }
-      /* Hamburger Button */
       .hamburger-btn {
         position: fixed;
         top: 20px;
@@ -179,7 +169,6 @@
     </style>
   </head>
   <body>
-    <!-- Top Wave Background -->
     <div class="top-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -190,7 +179,6 @@
       </svg>
     </div>
 
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="close-btn" id="closeBtn">&times;</div>
       <h2>Owner Menu</h2>
@@ -204,20 +192,17 @@
       </ul>
     </div>
 
-    <!-- Hamburger Button -->
     <button class="hamburger-btn" id="hamburgerBtn">☰</button>
 
-    <!-- Hero Container & Card -->
     <div class="hero-container">
       <div class="hero-card">
         <h1>My Reservations</h1>
         <div id="reservations" class="reservation-list">
-          <!-- Reservations will be populated here -->
+          <!-- Populated by JS -->
         </div>
       </div>
     </div>
 
-    <!-- Bottom Wave Background -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -230,7 +215,6 @@
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Sidebar functionality
       const sidebar = document.getElementById("sidebar");
       const hamburgerBtn = document.getElementById("hamburgerBtn");
       const closeBtn = document.getElementById("closeBtn");
@@ -251,17 +235,17 @@
         localStorage.setItem("sidebarOpen", "false");
       });
 
-      // Fetch reservations functionality
       async function loadReservations() {
         try {
           const response = await fetch("/my-reservations-data");
-          if (!response.ok) throw new Error("Failed to fetch reservations");
           const reservations = await response.json();
           const container = document.getElementById("reservations");
-          if (!reservations || reservations.length === 0) {
+
+          if (!reservations.length) {
             container.innerHTML = "<p>No reservations found.</p>";
             return;
           }
+
           container.innerHTML = "";
           reservations.forEach((res) => {
             const div = document.createElement("div");
@@ -272,19 +256,45 @@
               <p><strong>From:</strong> ${new Date(res.startTime).toLocaleString()}</p>
               <p><strong>To:</strong> ${new Date(res.endTime).toLocaleString()}</p>
               <p><strong>Cost (Rs):</strong> ${new Number(res.cost).toLocaleString()}</p>
-              <form method="POST" action="/cancel-reservation">
-                <input type="hidden" name="id" value="${res._id}">
-                <button type="submit" class="btn btn-danger">Cancel Reservation</button>
-              </form>
+              <button class="btn btn-danger" onclick="cancelReservation('${res._id}', this)">Cancel Reservation</button>
             `;
             container.appendChild(div);
           });
-        } catch (error) {
-          console.error(error);
-          document.getElementById("reservations").innerHTML =
-            "<p>Error loading reservations.</p>";
+        } catch (err) {
+          document.getElementById("reservations").innerHTML = "<p>Error loading reservations.</p>";
+          console.error(err);
         }
       }
+
+      async function cancelReservation(id, button) {
+        try {
+          button.disabled = true;
+          const res = await fetch("/cancel-reservation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            const msg = document.createElement("div");
+            msg.textContent = data.message;
+            msg.style.color = "lightgreen";
+            msg.style.marginTop = "10px";
+            button.parentNode.appendChild(msg);
+            setTimeout(() => {
+              button.closest(".reservation-item").remove();
+            }, 2000);
+          } else {
+            alert(data.error || "Error cancelling reservation");
+            button.disabled = false;
+          }
+        } catch (err) {
+          alert("Failed to cancel reservation");
+          button.disabled = false;
+        }
+      }
+
       loadReservations();
     </script>
   </body>

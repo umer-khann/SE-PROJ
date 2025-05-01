@@ -476,13 +476,12 @@ app.post("/cancel-reservation", isAuthenticated, isOwner, async (req, res) => {
   try {
     const { id } = req.body;
     await Reservation.findByIdAndDelete(id);
-    res.send(
-      'Reservation cancelled successfully! <a href="/myReservations.html">Back</a>'
-    );
+    res.status(200).json({ message: "Reservation cancelled successfully!" });
   } catch (error) {
-    res.status(500).send("Error cancelling reservation: " + error.message);
+    res.status(500).json({ error: "Error cancelling reservation: " + error.message });
   }
 });
+
 
 // Admin Routes
 app.get("/adminDashboard.html", isAuthenticated, isAdmin, (req, res) => {
