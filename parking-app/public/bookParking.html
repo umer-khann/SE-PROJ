@@ -84,7 +84,7 @@
         font-weight: 700;
         font-size: 2rem;
         text-transform: uppercase;
-        color:cadetblue;
+        color: cadetblue;
       }
 
       /* Form Elements */
@@ -366,10 +366,36 @@
         }
       }
 
-      // Initialize dropdowns on page load
+      // Initialize dropdowns and date validation on page load
       document.addEventListener("DOMContentLoaded", function () {
         populateParkingSpaces();
         populateUserVehicles();
+
+        // Date inputs validation setup
+        const startInput = document.querySelector('input[name="startTime"]');
+        const endInput = document.querySelector('input[name="endTime"]');
+        const now = new Date();
+        const nowString = now.toISOString().slice(0,16);
+        if (startInput) startInput.min = nowString;
+        if (endInput) endInput.min = nowString;
+
+        const form = document.querySelector('form');
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            const start = new Date(startInput.value);
+            const end = new Date(endInput.value);
+            if (start < new Date()) {
+              e.preventDefault();
+              alert('Start time cannot be in the past.');
+              return;
+            }
+            if (end <= start) {
+              e.preventDefault();
+              alert('End time must be after start time.');
+              return;
+            }
+          });
+        }
       });
     </script>
   </body>
